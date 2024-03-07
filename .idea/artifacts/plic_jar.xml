@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="plic:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/plic_jar</output-path>
+    <root id="archive" name="plic.jar">
+      <element id="module-output" name="Plic" />
+    </root>
+  </artifact>
+</component>

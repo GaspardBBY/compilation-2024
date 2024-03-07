@@ -1,0 +1,13 @@
+programme essai {
+
+           entier k ;
+           entier j ;
+           ecrire j ;
+           k := 57 ;
+           j := 590 ;
+           ecrire k ;
+           ecrire j ;
+           ecrire k ;
+           k := 5 ;
+             ecrire k ;
+}
