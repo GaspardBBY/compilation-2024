@@ -14,4 +14,13 @@ public class Nombre extends Expression {
     public String toString() {
         return "" + valeur;
     }
+
+    @Override
+    public String getTypes() {
+        return "nombre";
+    }
+
+    public String toMips() {
+        return "li $t1, " + valeur + "\n";
+    }
 }

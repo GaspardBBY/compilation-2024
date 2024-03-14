@@ -27,8 +27,12 @@ public class TDS {
             throw new DoubleDeclaration("Double déclaration de " + e.idf);
         }
         s.setDeplacement(cptDepl * -4);
+        if (s instanceof SymboleTableau) {
+            cptDepl += ((SymboleTableau) s).getTaille();
+        } else {
+            cptDepl++;
+        }
         map.put(e, s);
-        cptDepl++;
     }
 
     public TreeMap<Entree, Symbole> getMap() {
@@ -38,7 +42,7 @@ public class TDS {
     @Override
     public String toString() {
         var affichageDeLamap = map.entrySet().stream()
-                .map(e ->  e.getKey() + " => " + e.getValue())
+                .map(e -> e.getKey() + " => " + e.getValue())
                 .reduce((a, b) -> a + "\n\t" + b).orElse("");
         return "TDS{\n" +
                 "Compteur déplacement=" + cptDepl +
@@ -46,7 +50,11 @@ public class TDS {
                 "\n}";
     }
 
-    public boolean contain(Entree e){
+    public boolean contain(Entree e) {
         return map.containsKey(e);
+    }
+
+    public static Symbole getSymbole(String idf) {
+        return instance.map.get(new Entree(idf));
     }
 }

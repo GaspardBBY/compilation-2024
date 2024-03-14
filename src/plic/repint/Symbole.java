@@ -5,7 +5,7 @@ package plic.repint;
  * ○ Type de chaque variable
  * ○ Déplacement par rapport au début de la zone des variables
  */
-public class Symbole {
+public abstract class Symbole {
     String type;
     int deplacement;
 
@@ -22,10 +22,5 @@ public class Symbole {
     }
 
     @Override
-    public String toString() {
-        return "Symbole{" +
-                "type='" + type + '\'' +
-                ", deplacement=" + deplacement +
-                '}';
-    }
+    public abstract String toString();
 }

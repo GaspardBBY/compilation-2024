@@ -1,8 +1,5 @@
 package plic.repint;
 
-import plic.analyse.AnalyseurLexical;
-import plic.analyse.AnalyseurSyntaxique;
-
 /**
  * Affectation
  * de la forme : idf := exp;
@@ -10,28 +7,27 @@ import plic.analyse.AnalyseurSyntaxique;
 public class Affectation extends Instruction {
 
     Expression exp;
-    Idf idf;
+    Acces acces;
 
-    public Affectation(Expression exp, Idf idf) {
+    public Affectation(Expression exp, Acces acces) {
         this.exp = exp;
-        this.idf = idf;
+        this.acces = acces;
     }
 
     public String toString() {
-        return idf.toString() + " := " + exp.toString() + ";";
+        return acces.toString() + " := " + exp.toString() + ";";
     }
 
     /**
      * Vérification que si l'expression est une variable, elle est déclarée
+     *
      * @throws ErreurSementique si on tente d'affecter une valeur à une variable non déclarée
      */
     @Override
     public void verifier() throws ErreurSementique {
-        var tds = TDS.getInstance();
-
-        boolean contained = tds.contain(new Entree(idf.toString()));
+        boolean contained = TDS.getSymbole(acces.getNom()) != null;
         if (!contained) {
-            throw new ErreurSementique("Variable " + idf.toString() + " non déclarée");
+            throw new ErreurSementique("Variable " + acces.toString() + " non déclarée");
         }
 
     }
@@ -40,16 +36,32 @@ public class Affectation extends Instruction {
     public String toMips() {
         StringBuilder sb = new StringBuilder();
         var map = TDS.getInstance().getMap();
-        var symbole = map.get(new Entree(idf.toString()));
+        var symbole = map.get(new Entree(acces.getNom()));
         //1. Déterminer l'emplacement de la variable idf dans la pile:
         var deplacement = symbole.getDeplacement();
+        if (acces instanceof AccesTableau) {
+            // B[i] := A;
+            var index = ((AccesTableau) acces).getIndice();
+            deplacement += index * -4;
+        }
 
-        if (exp instanceof Idf) {
-            // B := A;
+        if (exp instanceof Acces) {
+
             var variableA = map.get(new Entree(((Idf) exp).getNom()));
             var deplacementA = variableA.getDeplacement();
-            // Charger la valeur de A dans $t0
-            sb.append("lw $t0, ").append(deplacementA).append("($sp)\n");
+            if (exp instanceof Idf) {
+                // B := A;
+                // Charger la valeur de A dans $t0
+                sb.append("lw $t0, ").append(deplacementA).append("($sp)\n");
+            }
+            if (exp instanceof AccesTableau) {
+                System.out.println("A[I]");
+                // B := A[i];
+                var index = ((AccesTableau) exp).getIndice();
+                // Charger la valeur de A[i] dans $t0
+                sb.append("lw $t0, ").append(deplacementA + index * -4).append("($sp)\n");
+            }
+            sb.append(((Acces) exp).toMips());
             // Stocker la valeur de $t0 dans B
             sb.append("sw $t0, ").append(deplacement).append("($sp)\n");
         } else if (exp instanceof Nombre) {
