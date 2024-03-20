@@ -6,6 +6,11 @@ public class SymboleEntier  extends Symbole{
     }
 
     @Override
+    public int getSize() {
+        return 1;
+    }
+
+    @Override
     public String toString() {
         return "SymboleEntier{" +
                 "type='" + type + '\'' +

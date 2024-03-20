@@ -18,13 +18,7 @@ public class Ecrire extends Instruction {
      */
     @Override
     public void verifier() throws ErreurSementique {
-        System.out.println("verification dd'une expression de type  " + exp.getTypes());
         if (exp.getTypes().equals("nombre")) return;
-
-        if (!(exp instanceof Acces)) {
-            // dev error, if exp is not an Number, it should be an Acces
-            throw new Error("A type is not handled");
-        }
         if (TDS.getSymbole(((Acces) exp).getIdf()) == null)
             throw new ErreurSementique("Variable " + exp.toString() + " non déclarée, impossible de l'afficher !");
 

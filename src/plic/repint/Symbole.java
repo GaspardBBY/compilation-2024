@@ -21,6 +21,12 @@ public abstract class Symbole {
         return deplacement;
     }
 
+    /**
+     * get size in memory of the symbol
+     * @return size in memory
+     */
+    public abstract int getSize();
+
     @Override
     public abstract String toString();
 }

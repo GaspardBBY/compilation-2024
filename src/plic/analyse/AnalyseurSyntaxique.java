@@ -201,26 +201,7 @@ public class AnalyseurSyntaxique {
         }
 
         if (estIdf()) {
-            var idf = new Idf(this.uniteCourante);
-            var idfDeclared = TDS.getSymbole(idf.getIdf());
-            this.uniteCourante = this.analex.next();
-            if (!(idfDeclared instanceof SymboleTableau)) {
-                return idf;
-            }
-            // if it's an array
-            this.analyseTerminal("[");
-            // t [ 4 ]
-            if (this.estCsteEntiere()) {
-                int index = parseInt(this.uniteCourante);
-                this.uniteCourante = this.analex.next();
-                this.analyseTerminal("]");
-                return new AccesTableau(new Idf(idf.getIdf()), new Nombre(index));
-            }
-            // if it's array of array like t[k[3]]
-            var index = this.analyseOperande();
-            this.analyseTerminal("]");
-            return new AccesTableau(new Idf(idf.getIdf()), index);
-
+            return this.analyseAcces();
         }
         throw new ErreurSyntaxique("constante entière ou idf attendu");
     }
@@ -247,25 +228,13 @@ public class AnalyseurSyntaxique {
             throw new ErreurSyntaxique("idf attendu");
         }
         var idf = new Idf(this.uniteCourante);
-        // Using the TDS to get the variable type
-        var variable = TDS.getInstance().getMap().get(new Entree(this.uniteCourante));
-        // if it's an array
-        if (variable instanceof SymboleTableau) {
-            this.uniteCourante = this.analex.next();
-            this.analyseTerminal("[");
-            if (!this.estCsteEntiere()) {
-                // if it's an array of array
-                Expression expression = this.analyseOperande();
-                this.analyseTerminal("]");
-                return new AccesTableau(idf, expression);
-            }
-            var taille = parseInt(this.uniteCourante);
-            this.uniteCourante = this.analex.next();
-            this.analyseTerminal("]");
-            return new AccesTableau(new Idf(idf.getIdf()), new Nombre(taille));
-        }
-        // if it's not an array, it's an idf
         this.uniteCourante = this.analex.next();
+        if (this.uniteCourante.equals("[")) {
+            this.uniteCourante = this.analex.next();
+            Expression expression = this.analyseOperande();
+            this.analyseTerminal("]");
+            return new AccesTableau(idf, expression);
+        }
         return idf;
     }
 

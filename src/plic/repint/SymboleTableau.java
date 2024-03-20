@@ -9,6 +9,11 @@ public class SymboleTableau extends Symbole {
     }
 
     @Override
+    public int getSize() {
+        return taille;
+    }
+
+    @Override
     public String toString() {
         return "SymboleTableau{" +
                 "type='" + type + '\'' +

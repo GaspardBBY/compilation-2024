@@ -27,11 +27,8 @@ public class TDS {
             throw new DoubleDeclaration("Double déclaration de " + e.idf);
         }
         s.setDeplacement(cptDepl * -4);
-        if (s instanceof SymboleTableau) {
-            cptDepl += ((SymboleTableau) s).getTaille();
-        } else {
-            cptDepl++;
-        }
+
+        cptDepl += s.getSize();
         map.put(e, s);
     }
 

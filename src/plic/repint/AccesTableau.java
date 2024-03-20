@@ -35,10 +35,6 @@ public class AccesTableau extends Acces {
         if (!TDS.getInstance().contain(new Entree(idf.getIdf()))) {
             throw new ErreurSementique("Erreur : identifiant " + idf + " non déclaré");
         }
-        var symbole = TDS.getSymbole(idf.getIdf());
-        if (!(symbole instanceof SymboleTableau)) {
-            throw new ErreurSementique("Erreur : " + idf + " n'est pas un tableau");
-        }
     }
 
     @Override
