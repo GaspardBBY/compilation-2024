@@ -21,6 +21,6 @@ public class Nombre extends Expression {
     }
 
     public String toMips() {
-        return "li $t1, " + valeur + "\n";
+        return "li $v0, " + valeur + "\n";
     }
 }

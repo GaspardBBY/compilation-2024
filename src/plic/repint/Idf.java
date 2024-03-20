@@ -7,7 +7,7 @@ public class Idf extends Acces {
         this.nom = nom;
     }
 
-    public String getNom() {
+    public String getIdf() {
         return nom;
     }
 
@@ -27,8 +27,19 @@ public class Idf extends Acces {
         }
     }
 
-    public String toMips(int deplacement) {
-        // load the value of the variable into $t1
-        return "lw $t1, " + deplacement + "($sp)\n";
+    public String toMips() {
+        // load the value of the variable into $v0
+        Symbole symbole = TDS.getSymbole(this.nom);
+        return "lw $v0, " + symbole.getDeplacement() + "($sp)\n";
+    }
+
+    /**
+     * renvoie le code qui calcule l'adresse de la notation d'accès dans $a0
+     * @return
+     */
+    @Override
+    public String getAdresse() {
+        var deplacement = TDS.getSymbole(nom).getDeplacement();
+        return "la $a0, " + deplacement + "($sp)\n";
     }
 }

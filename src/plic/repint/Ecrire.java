@@ -25,7 +25,7 @@ public class Ecrire extends Instruction {
             // dev error, if exp is not an Number, it should be an Acces
             throw new Error("A type is not handled");
         }
-        if (TDS.getSymbole(((Acces) exp).getNom()) == null)
+        if (TDS.getSymbole(((Acces) exp).getIdf()) == null)
             throw new ErreurSementique("Variable " + exp.toString() + " non déclarée, impossible de l'afficher !");
 
 
@@ -34,10 +34,13 @@ public class Ecrire extends Instruction {
     @Override
     public String toMips() {
         StringBuilder sb = new StringBuilder();
-        sb.append(exp.toMips());
 
-        // Instructions pour afficher la valeur de $t1
-        sb.append("move $a0, $t1\n");
+        sb.append("# Ecrire ").append(exp.toString()).append("\n");
+
+        sb.append(exp.toMips());
+        sb.append("# on a finit d'affecter les valeurs\n");
+        // Instructions pour afficher la valeur de $v0
+        sb.append("move $a0, $v0\n");
         sb.append("li $v0, 1\n");
         sb.append("syscall\n");
 

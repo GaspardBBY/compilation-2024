@@ -10,17 +10,13 @@ public abstract class Acces extends Expression {
 
     public abstract String getTypes();
 
-    public abstract String getNom();
+    public abstract String getIdf();
+
+    public abstract String toMips();
 
     /**
-     * Calcule l'adresse de l'élément dans la pile puis appel la méthode toMips de l'élément
-     * @return
+     * renvoie le code qui calcule l'adresse de la notation d'accès dans $a0
+     * @return le code MIPS
      */
-    public String toMips(){
-        var symbole = TDS.getSymbole(getNom());
-        var deplacement = symbole.getDeplacement();
-        return toMips(deplacement);
-    }
-
-    public abstract String toMips(int deplacement);
+    public abstract String getAdresse();
 }
