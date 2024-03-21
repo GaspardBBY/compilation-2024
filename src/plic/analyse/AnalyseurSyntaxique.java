@@ -1,6 +1,9 @@
 package plic.analyse;
 
 import plic.repint.*;
+import plic.repint.operateur.Multiplication;
+import plic.repint.operateur.Somme;
+import plic.repint.operateur.Soustraction;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -172,6 +175,7 @@ public class AnalyseurSyntaxique {
         this.analyseTerminal("ecrire");
         if (logger) System.out.println("\t\tAnalyse ES");
         var expression = this.analyseExpression();
+        this.analyseTerminal(";");
         if (logger) System.out.println("\t\tFin analyse ES");
         return new Ecrire(expression);
     }
@@ -180,16 +184,34 @@ public class AnalyseurSyntaxique {
      * EXPRESSION → OPERANDE
      *
      * @throws ErreurSyntaxique Si non conforme
+     * Ne fait pas de vérification sur la fin de l'expression (comme ";")
      */
     private Expression analyseExpression() throws ErreurSyntaxique {
         if (logger) System.out.println("Analyse expression");
-        Expression operand = this.analyseOperande();
-        this.analyseTerminal(";");
-        return operand;
+        Expression operandGauche = this.analyseOperande();
+        if (!estOperateur()) {
+            return operandGauche;
+        }
+
+        String operateur = this.uniteCourante;
+        this.uniteCourante = this.analex.next();
+        Expression operandDroite = this.analyseOperande();
+
+        return switch (operateur) {
+            case "+" -> new Somme(operandGauche, operandDroite);
+            case "-" -> new Soustraction(operandGauche, operandDroite);
+            case "*" -> new Multiplication(operandGauche, operandDroite);
+            default -> throw new ErreurSyntaxique("Opérateur non reconnu");
+        };
     }
 
     /**
-     * OPERANDE → entier
+     * OPERANDE →
+     *      csteEntiere
+     *      ACCES
+     *      - ( EXPRESSION )
+     *      non EXPRESSION
+     *      ( EXPRESSION )
      *
      * @return
      */
@@ -199,10 +221,31 @@ public class AnalyseurSyntaxique {
             this.uniteCourante = this.analex.next();
             return nombre;
         }
-
         if (estIdf()) {
             return this.analyseAcces();
         }
+        if (this.uniteCourante.equals("-")) {
+            this.uniteCourante = this.analex.next();
+            this.analyseTerminal("(");
+            var expression = this.analyseExpression();
+            this.analyseTerminal(")");
+            throw new ErreurSyntaxique("Opérateur non implémenté");
+//            return new Negation(expression);
+        }
+        if (this.uniteCourante.equals("non")) {
+            this.uniteCourante = this.analex.next();
+            var expression = this.analyseExpression();
+//            this.analyseTerminal(); ON DOIT VERIFIER QUELQUE CHOSE
+            throw new ErreurSyntaxique("Opérateur non implémenté");
+//            return new Non(expression);
+        }
+        if (this.uniteCourante.equals("(")) {
+            this.uniteCourante = this.analex.next();
+            var expression = this.analyseExpression();
+            this.analyseTerminal(")");
+            return expression;
+        }
+
         throw new ErreurSyntaxique("constante entière ou idf attendu");
     }
 
@@ -215,6 +258,7 @@ public class AnalyseurSyntaxique {
         Acces idf = this.analyseAcces();
         this.analyseTerminal(":=");
         var expression = analyseExpression();
+        this.analyseTerminal(";");
         return new Affectation(expression, idf);
     }
 
@@ -282,5 +326,9 @@ public class AnalyseurSyntaxique {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    private boolean estOperateur() {
+        return this.uniteCourante.equals("+") || this.uniteCourante.equals("-") || this.uniteCourante.equals("*");
     }
 }

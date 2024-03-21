@@ -17,4 +17,9 @@ public class SymboleEntier  extends Symbole{
                 ", deplacement=" + deplacement +
                 '}';
     }
+
+    @Override
+    public String getType() {
+        return "entier";
+    }
 }

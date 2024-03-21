@@ -22,6 +22,11 @@ public class SymboleTableau extends Symbole {
                 '}';
     }
 
+    @Override
+    public String getType() {
+        return "tableau";
+    }
+
     public int getTaille() {
         return taille;
     }

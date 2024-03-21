@@ -26,10 +26,12 @@ public class Affectation extends Instruction {
     @Override
     public void verifier() throws ErreurSementique {
         boolean contained = TDS.getSymbole(acces.getIdf()) != null;
+        var symbole = TDS.getSymbole(acces.getIdf());
+        if (!symbole.getType().equals(exp.getTypes()))
+            throw new ErreurSementique(": impossible d'affecter un " + exp.getTypes() + " à un " + symbole.getType());
         if (!contained) {
             throw new ErreurSementique("Variable " + acces.toString() + " non déclarée");
         }
-
     }
 
     @Override
