@@ -38,9 +38,9 @@ public class Affectation extends Instruction {
         sb.append("# Affectation\n");
         sb.append(exp.toMips());
         sb.append("# Utilisation d'une variable temporaire\n");
-        sb.append("move $t0, $v0\n");
+        sb.append("move $t1, $v0\n");
         sb.append(acces.getAdresse());
-        sb.append("move $v0, $t0\n");
+        sb.append("move $v0, $t1\n");
         sb.append("sw $v0, 0($a0)\n");
         return sb.toString();
     }

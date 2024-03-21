@@ -1,7 +1,7 @@
 package plic.repint;
 
 public class Nombre extends Expression {
-    private int valeur;
+    private final int valeur;
 
     public Nombre(int valeur) {
         this.valeur = valeur;

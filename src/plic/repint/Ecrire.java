@@ -32,7 +32,6 @@ public class Ecrire extends Instruction {
         sb.append("# Ecrire ").append(exp.toString()).append("\n");
 
         sb.append(exp.toMips());
-        sb.append("# on a finit d'affecter les valeurs\n");
         // Instructions pour afficher la valeur de $v0
         sb.append("move $a0, $v0\n");
         sb.append("li $v0, 1\n");

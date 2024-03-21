@@ -1,7 +1,7 @@
 package plic.repint;
 
 public class Idf extends Acces {
-    private String nom;
+    private final String nom;
 
     public Idf(String nom) {
         this.nom = nom;
@@ -35,7 +35,7 @@ public class Idf extends Acces {
 
     /**
      * renvoie le code qui calcule l'adresse de la notation d'accès dans $a0
-     * @return
+     * @return le code MIPS
      */
     @Override
     public String getAdresse() {
