@@ -1,7 +1,7 @@
 package plic.repint;
 
 public class Nombre extends Expression {
-    private int valeur;
+    private final int valeur;
 
     public Nombre(int valeur) {
         this.valeur = valeur;
@@ -13,5 +13,14 @@ public class Nombre extends Expression {
 
     public String toString() {
         return "" + valeur;
+    }
+
+    @Override
+    public String getTypes() {
+        return "nombre";
+    }
+
+    public String toMips() {
+        return "li $v0, " + valeur + "\n";
     }
 }

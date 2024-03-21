@@ -1,12 +1,6 @@
 package plic.analyse;
 
 import plic.repint.*;
-import plic.repint.Expression;
-import plic.repint.Idf;
-import plic.repint.Nombre;
-import plic.repint.Affectation;
-import plic.repint.Ecrire;
-import plic.repint.Instruction;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,9 +10,7 @@ import static java.lang.Integer.parseInt;
 public class AnalyseurSyntaxique {
     private AnalyseurLexical analex;
     private String uniteCourante;
-
     public final boolean logger = false;
-
 
     public AnalyseurSyntaxique(File file) {
         try {
@@ -64,7 +56,7 @@ public class AnalyseurSyntaxique {
         this.analyseTerminal("{");
         // Itérer sur analyseDeclaration tant qu’il y a des déclarations
         if (logger) System.out.println("\tBoucle d'analyse des déclarations");
-        while (this.uniteCourante.equals("entier")) {
+        while (this.uniteCourante.equals("entier") || this.uniteCourante.equals("tableau")) {
             this.analyseDeclaration();
         }
         if (logger) System.out.println("\nFin de l'analyse des déclarations");
@@ -95,10 +87,28 @@ public class AnalyseurSyntaxique {
         if (logger) System.out.println("\t\tAnalyse de la déclaration");
         this.analyseType();
         if (!this.estIdf()) {
-            throw new ErreurSyntaxique("idf attendu");
+            // maybe it's an array like [ nombre ] idf
+            this.analyseTerminal("[");
+            if (!this.estCsteEntiere()) {
+                throw new ErreurSyntaxique("constante entière attendue");
+            }
+            int taille = parseInt(this.uniteCourante);
+            // skip the number
+            this.uniteCourante = this.analex.next();
+            this.analyseTerminal("]");
+            if (!this.estIdf()) {
+                throw new ErreurSyntaxique("idf attendu après la déclaration d'un tableau");
+            }
+            String idf = this.uniteCourante;
+            this.uniteCourante = this.analex.next();
+            this.analyseTerminal(";");
+            if (taille <= 0) throw new ErreurSyntaxique("La taille d'un tableau doit être positive");
+            Symbole symbole = new SymboleTableau("tableau", taille);
+            Entree entree = new Entree(idf);
+            TDS.getInstance().ajouter(entree, symbole);
+            return;
         }
-
-        Symbole symbole = new Symbole("entier");
+        Symbole symbole = new SymboleEntier("entier");
         Entree entree = new Entree(this.uniteCourante);
         TDS.getInstance().ajouter(entree, symbole);
 
@@ -108,15 +118,15 @@ public class AnalyseurSyntaxique {
     }
 
     /**
-     * Caractère courant doit être un entier
+     * Caractère courant doit être un entier ou un tableau
      *
      * @throws ErreurSyntaxique Si non conforme
      */
     private void analyseType() throws ErreurSyntaxique {
         if (logger)
-            System.out.println("\t\t\t-Analyse du type: " + this.uniteCourante + "=>" + this.uniteCourante.equals("entier"));
-        if (!this.uniteCourante.equals("entier"))
-            throw new ErreurSyntaxique("entier attendu");
+            System.out.println("\t\t\t-Analyse du type: " + this.uniteCourante);
+        if (!this.uniteCourante.equals("entier") && !this.uniteCourante.equals("tableau"))
+            throw new ErreurSyntaxique("type \"entier\" ou \"tableau\" attendu");
         this.uniteCourante = this.analex.next();
     }
 
@@ -129,7 +139,7 @@ public class AnalyseurSyntaxique {
      */
     private void analyseTerminal(String terminal) throws ErreurSyntaxique {
         if (!this.uniteCourante.equals(terminal))
-            throw new ErreurSyntaxique("Analyse terminal: \"" + terminal + "\" attendu");
+            throw new ErreurSyntaxique("Analyse terminal: \"" + terminal + "\" attendu alors que la ligne courante est " + this.uniteCourante);
         this.uniteCourante = this.analex.next();
     }
 
@@ -174,7 +184,6 @@ public class AnalyseurSyntaxique {
     private Expression analyseExpression() throws ErreurSyntaxique {
         if (logger) System.out.println("Analyse expression");
         Expression operand = this.analyseOperande();
-        this.uniteCourante = this.analex.next();
         this.analyseTerminal(";");
         return operand;
     }
@@ -185,8 +194,15 @@ public class AnalyseurSyntaxique {
      * @return
      */
     private Expression analyseOperande() throws ErreurSyntaxique {
-        if (estCsteEntiere()) return new Nombre(parseInt(this.uniteCourante));
-        if (estIdf()) return new Idf(this.uniteCourante);
+        if (estCsteEntiere()) {
+            var nombre = new Nombre(parseInt(this.uniteCourante));
+            this.uniteCourante = this.analex.next();
+            return nombre;
+        }
+
+        if (estIdf()) {
+            return this.analyseAcces();
+        }
         throw new ErreurSyntaxique("constante entière ou idf attendu");
     }
 
@@ -196,7 +212,7 @@ public class AnalyseurSyntaxique {
      * @throws ErreurSyntaxique Si non conforme
      */
     private Affectation analyseAffectation() throws ErreurSyntaxique {
-        var idf = this.analyseAcces();
+        Acces idf = this.analyseAcces();
         this.analyseTerminal(":=");
         var expression = analyseExpression();
         return new Affectation(expression, idf);
@@ -207,11 +223,18 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private Idf analyseAcces() throws ErreurSyntaxique {
-        if (!this.estIdf())
+    private Acces analyseAcces() throws ErreurSyntaxique {
+        if (!this.estIdf()) {
             throw new ErreurSyntaxique("idf attendu");
+        }
         var idf = new Idf(this.uniteCourante);
         this.uniteCourante = this.analex.next();
+        if (this.uniteCourante.equals("[")) {
+            this.uniteCourante = this.analex.next();
+            Expression expression = this.analyseOperande();
+            this.analyseTerminal("]");
+            return new AccesTableau(idf, expression);
+        }
         return idf;
     }
 
@@ -221,9 +244,26 @@ public class AnalyseurSyntaxique {
      * @return true si c'est un identificateur
      */
     private boolean estIdf() {
-        if (this.uniteCourante.equals("programme") || this.uniteCourante.equals("entier") || this.uniteCourante.equals("ecrire"))
-            return false;
-        return this.uniteCourante.matches("\\b(?!EOF)[a-zA-Z]\\w*\\b"); // si tu mets un numero en premier caractère, ça ne marche pas
+        return estIdf(this.uniteCourante);
+    }
+
+    private boolean estIdf(String idf) {
+        if (idf.equals("programme") || idf.equals("entier") || idf.equals("ecrire")) return false;
+        return idf.matches("\\b(?!EOF)[a-zA-Z]\\w*\\b"); // si on mets un numero en premier caractère, ça ne marche pas
+    }
+
+    /**
+     * idf[expression]
+     *
+     * @return true si c'est un identificateur
+     */
+    private boolean estIdfAcces() {
+        String[] split = this.uniteCourante.split("\\[");
+        if (split.length == 1) return false;
+        if (estIdf(split[0])) return false;
+        split = split[1].split("\\]");
+        if (split.length == 1) return false;
+        return this.uniteCourante.matches("\\b(?!EOF)[a-zA-Z]\\w*\\b(\\[\\d+\\])"); // si tu mets un numero en premier caractère, ça ne marche pas
     }
 
     /**
@@ -232,8 +272,12 @@ public class AnalyseurSyntaxique {
      * @return true si c'est une constante entière
      */
     private boolean estCsteEntiere() {
+        return estCsteEntiere(this.uniteCourante);
+    }
+
+    private boolean estCsteEntiere(String uniteCourante) {
         try {
-            int type = parseInt(this.uniteCourante);
+            int type = parseInt(uniteCourante);
             return true;
         } catch (NumberFormatException e) {
             return false;

@@ -5,6 +5,7 @@ import plic.analyse.ErreurSyntaxique;
 import plic.repint.Bloc;
 import plic.repint.DoubleDeclaration;
 import plic.repint.ErreurSementique;
+import plic.repint.TDS;
 
 import java.io.File;
 
@@ -31,8 +32,6 @@ public class Plic {
         AnalyseurSyntaxique as = new AnalyseurSyntaxique(file);
         // Analyse syntaxique du texte source
         Bloc bloc = as.analyse();
-//        System.out.println(bloc);
-//        System.out.println(TDS.getInstance());
         bloc.verifier();
         System.out.println(bloc.toMips());
     }

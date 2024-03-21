@@ -1,8 +1,5 @@
 package plic.repint;
 
-import plic.analyse.AnalyseurLexical;
-import plic.analyse.AnalyseurSyntaxique;
-
 /**
  * Affectation
  * de la forme : idf := exp;
@@ -10,28 +7,27 @@ import plic.analyse.AnalyseurSyntaxique;
 public class Affectation extends Instruction {
 
     Expression exp;
-    Idf idf;
+    Acces acces;
 
-    public Affectation(Expression exp, Idf idf) {
+    public Affectation(Expression exp, Acces acces) {
         this.exp = exp;
-        this.idf = idf;
+        this.acces = acces;
     }
 
     public String toString() {
-        return idf.toString() + " := " + exp.toString() + ";";
+        return acces.toString() + " := " + exp.toString() + ";";
     }
 
     /**
      * Vérification que si l'expression est une variable, elle est déclarée
+     *
      * @throws ErreurSementique si on tente d'affecter une valeur à une variable non déclarée
      */
     @Override
     public void verifier() throws ErreurSementique {
-        var tds = TDS.getInstance();
-
-        boolean contained = tds.contain(new Entree(idf.toString()));
+        boolean contained = TDS.getSymbole(acces.getIdf()) != null;
         if (!contained) {
-            throw new ErreurSementique("Variable " + idf.toString() + " non déclarée");
+            throw new ErreurSementique("Variable " + acces.toString() + " non déclarée");
         }
 
     }
@@ -39,27 +35,13 @@ public class Affectation extends Instruction {
     @Override
     public String toMips() {
         StringBuilder sb = new StringBuilder();
-        var map = TDS.getInstance().getMap();
-        var symbole = map.get(new Entree(idf.toString()));
-        //1. Déterminer l'emplacement de la variable idf dans la pile:
-        var deplacement = symbole.getDeplacement();
-
-        if (exp instanceof Idf) {
-            // B := A;
-            var variableA = map.get(new Entree(((Idf) exp).getNom()));
-            var deplacementA = variableA.getDeplacement();
-            // Charger la valeur de A dans $t0
-            sb.append("lw $t0, ").append(deplacementA).append("($sp)\n");
-            // Stocker la valeur de $t0 dans B
-            sb.append("sw $t0, ").append(deplacement).append("($sp)\n");
-        } else if (exp instanceof Nombre) {
-            // i := 10;
-            //Utilisez l'instruction li pour charger la valeur 10 dans le registre $t0.
-            sb.append("li $t0, ").append(((Nombre) exp).getValeur()).append("\n");
-            //Utilisez l'instruction sw pour stocker la valeur de $t0 à l'adresse -4($sp) dans la pile.
-            sb.append("addi, $t1, $sp,").append(deplacement).append("\n");
-            sb.append("sw $t0, 0($t1)\n");
-        }
+        sb.append("# Affectation\n");
+        sb.append(exp.toMips());
+        sb.append("# Utilisation d'une variable temporaire\n");
+        sb.append("move $t1, $v0\n");
+        sb.append(acces.getAdresse());
+        sb.append("move $v0, $t1\n");
+        sb.append("sw $v0, 0($a0)\n");
         return sb.toString();
     }
 
