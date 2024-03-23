@@ -1,0 +1,5 @@
+programme tableauManip {
+            tableau [ 1 ] t1 ;
+            t1 := 28 ;
+            ecrire t1 [ 0 ] ;
+}

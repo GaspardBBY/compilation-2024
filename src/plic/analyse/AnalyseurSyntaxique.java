@@ -88,36 +88,43 @@ public class AnalyseurSyntaxique {
      */
     private void analyseDeclaration() throws ErreurSyntaxique, DoubleDeclaration {
         if (logger) System.out.println("\t\tAnalyse de la déclaration");
-        this.analyseType();
-        if (!this.estIdf()) {
-            // maybe it's an array like [ nombre ] idf
-            this.analyseTerminal("[");
-            if (!this.estCsteEntiere()) {
-                throw new ErreurSyntaxique("constante entière attendue");
-            }
-            int taille = parseInt(this.uniteCourante);
-            // skip the number
-            this.uniteCourante = this.analex.next();
-            this.analyseTerminal("]");
-            if (!this.estIdf()) {
-                throw new ErreurSyntaxique("idf attendu après la déclaration d'un tableau");
-            }
-            String idf = this.uniteCourante;
-            this.uniteCourante = this.analex.next();
-            this.analyseTerminal(";");
-            if (taille <= 0) throw new ErreurSyntaxique("La taille d'un tableau doit être positive");
-            Symbole symbole = new SymboleTableau("tableau", taille);
-            Entree entree = new Entree(idf);
-            TDS.getInstance().ajouter(entree, symbole);
-            return;
-        }
-        Symbole symbole = new SymboleEntier("entier");
-        Entree entree = new Entree(this.uniteCourante);
-        TDS.getInstance().ajouter(entree, symbole);
+        String type = this.analyseType();
+        switch (type) {
+            case "entier":
+                Symbole symbole = new SymboleEntier("entier");
+                Entree entree = new Entree(this.uniteCourante);
+                TDS.getInstance().ajouter(entree, symbole);
 
-        //Two nexts to skip the idf and the ;
-        this.uniteCourante = this.analex.next();
-        analyseTerminal(";");
+                //Two nexts to skip the idf and the ;
+                this.uniteCourante = this.analex.next();
+                analyseTerminal(";");
+                break;
+            case "tableau":
+                // maybe it's an array like [ nombre ] idf
+                this.analyseTerminal("[");
+                if (!this.estCsteEntiere()) {
+                    throw new ErreurSyntaxique("constante entière attendue");
+                }
+                int taille = parseInt(this.uniteCourante);
+                // skip the number
+                this.uniteCourante = this.analex.next();
+                this.analyseTerminal("]");
+                if (!this.estIdf()) {
+                    throw new ErreurSyntaxique("idf attendu après la déclaration d'un tableau");
+                }
+                String idf = this.uniteCourante;
+                this.uniteCourante = this.analex.next();
+                this.analyseTerminal(";");
+                if (taille <= 0) throw new ErreurSyntaxique("La taille d'un tableau doit être positive");
+                Symbole symbole = new SymboleTableau("tableau", taille);
+                Entree entree = new Entree(idf);
+                TDS.getInstance().ajouter(entree, symbole);
+                return;
+            break;
+            default:
+                throw new ErreurSyntaxique("Type non reconnu");
+        }
+
     }
 
     /**
@@ -125,12 +132,21 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private void analyseType() throws ErreurSyntaxique {
+    private String analyseType() throws ErreurSyntaxique {
         if (logger)
             System.out.println("\t\t\t-Analyse du type: " + this.uniteCourante);
-        if (!this.uniteCourante.equals("entier") && !this.uniteCourante.equals("tableau"))
-            throw new ErreurSyntaxique("type \"entier\" ou \"tableau\" attendu");
+        String type = this.uniteCourante;
         this.uniteCourante = this.analex.next();
+        switch (type) {
+            case "entier":
+                return "entier";
+            case "tableau":
+                return "tableau";
+            case "boolean":
+                return "boolean";
+            default:
+                throw new ErreurSyntaxique("type \"entier\" ou \"tableau\" attendu");
+        }
     }
 
 
@@ -184,7 +200,7 @@ public class AnalyseurSyntaxique {
      * EXPRESSION → OPERANDE
      *
      * @throws ErreurSyntaxique Si non conforme
-     * Ne fait pas de vérification sur la fin de l'expression (comme ";")
+     *                          Ne fait pas de vérification sur la fin de l'expression (comme ";")
      */
     private Expression analyseExpression() throws ErreurSyntaxique {
         if (logger) System.out.println("Analyse expression");
@@ -207,11 +223,11 @@ public class AnalyseurSyntaxique {
 
     /**
      * OPERANDE →
-     *      csteEntiere
-     *      ACCES
-     *      - ( EXPRESSION )
-     *      non EXPRESSION
-     *      ( EXPRESSION )
+     * csteEntiere
+     * ACCES
+     * - ( EXPRESSION )
+     * non EXPRESSION
+     * ( EXPRESSION )
      *
      * @return
      */
