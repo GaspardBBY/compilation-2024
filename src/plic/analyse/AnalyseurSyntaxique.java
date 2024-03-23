@@ -1,9 +1,11 @@
 package plic.analyse;
 
+import plic.repint.Boolean;
 import plic.repint.*;
-import plic.repint.operateur.Multiplication;
-import plic.repint.operateur.Somme;
-import plic.repint.operateur.Soustraction;
+import plic.repint.operateur.OperateurBoolean.Superieur;
+import plic.repint.operateur.OperateurEntier.Multiplication;
+import plic.repint.operateur.OperateurEntier.Somme;
+import plic.repint.operateur.OperateurEntier.Soustraction;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,7 +25,7 @@ public class AnalyseurSyntaxique {
         }
     }
 
-    public Bloc analyse() throws ErreurSyntaxique, DoubleDeclaration {
+    public Bloc analyse() throws ErreurSyntaxique, DoubleDeclaration, ErreurSementique {
         // Demander la construction de la première unité lexicale
         this.uniteCourante = this.analex.next();
         Bloc blocCourant = new Bloc();
@@ -38,7 +40,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private void analyseProg(Bloc blocCourant) throws ErreurSyntaxique, DoubleDeclaration {
+    private void analyseProg(Bloc blocCourant) throws ErreurSyntaxique, DoubleDeclaration, ErreurSementique {
         if (!this.uniteCourante.equals("programme"))
             throw new ErreurSyntaxique("programme attendu");
         this.uniteCourante = this.analex.next();
@@ -54,12 +56,12 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private void analyseBloc(Bloc blocCourant) throws ErreurSyntaxique, DoubleDeclaration {
+    private void analyseBloc(Bloc blocCourant) throws ErreurSyntaxique, DoubleDeclaration, ErreurSementique {
         if (logger) System.out.println("\tAnalyse du bloc");
         this.analyseTerminal("{");
         // Itérer sur analyseDeclaration tant qu’il y a des déclarations
         if (logger) System.out.println("\tBoucle d'analyse des déclarations");
-        while (this.uniteCourante.equals("entier") || this.uniteCourante.equals("tableau")) {
+        while (this.uniteCourante.equals("entier") || this.uniteCourante.equals("tableau") || this.uniteCourante.equals("boolean")) {
             this.analyseDeclaration();
         }
         if (logger) System.out.println("\nFin de l'analyse des déclarations");
@@ -83,6 +85,7 @@ public class AnalyseurSyntaxique {
 
     /**
      * Déclaration => TYPE idf
+     * Add the variable to the TDS
      *
      * @throws ErreurSyntaxique
      */
@@ -116,11 +119,19 @@ public class AnalyseurSyntaxique {
                 this.uniteCourante = this.analex.next();
                 this.analyseTerminal(";");
                 if (taille <= 0) throw new ErreurSyntaxique("La taille d'un tableau doit être positive");
-                Symbole symbole = new SymboleTableau("tableau", taille);
-                Entree entree = new Entree(idf);
-                TDS.getInstance().ajouter(entree, symbole);
-                return;
-            break;
+                Symbole symboleTableau = new SymboleTableau("tableau", taille);
+                Entree entreeTableau = new Entree(idf);
+                TDS.getInstance().ajouter(entreeTableau, symboleTableau);
+                break;
+            case "boolean":
+                Symbole symboleBoolean = new SymboleBoolean("boolean");
+                Entree entreeBoolean = new Entree(this.uniteCourante);
+                TDS.getInstance().ajouter(entreeBoolean, symboleBoolean);
+
+                //Two nexts to skip the idf and the ;
+                this.uniteCourante = this.analex.next();
+                analyseTerminal(";");
+                break;
             default:
                 throw new ErreurSyntaxique("Type non reconnu");
         }
@@ -167,7 +178,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private void analyseInstruction(Bloc blocCourant) throws ErreurSyntaxique {
+    private void analyseInstruction(Bloc blocCourant) throws ErreurSyntaxique, ErreurSementique {
         if (logger) System.out.println("\tAnalyse d'une instruction");
         if (this.uniteCourante.equals("ecrire")) {
             if (logger) System.out.println("\t\tAnalyse d'une ES");
@@ -187,7 +198,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private Instruction analyseES() throws ErreurSyntaxique {
+    private Instruction analyseES() throws ErreurSyntaxique, ErreurSementique {
         this.analyseTerminal("ecrire");
         if (logger) System.out.println("\t\tAnalyse ES");
         var expression = this.analyseExpression();
@@ -202,7 +213,7 @@ public class AnalyseurSyntaxique {
      * @throws ErreurSyntaxique Si non conforme
      *                          Ne fait pas de vérification sur la fin de l'expression (comme ";")
      */
-    private Expression analyseExpression() throws ErreurSyntaxique {
+    private Expression analyseExpression() throws ErreurSyntaxique, ErreurSementique {
         if (logger) System.out.println("Analyse expression");
         Expression operandGauche = this.analyseOperande();
         if (!estOperateur()) {
@@ -217,6 +228,7 @@ public class AnalyseurSyntaxique {
             case "+" -> new Somme(operandGauche, operandDroite);
             case "-" -> new Soustraction(operandGauche, operandDroite);
             case "*" -> new Multiplication(operandGauche, operandDroite);
+            case ">" -> new Superieur(operandGauche, operandDroite);
             default -> throw new ErreurSyntaxique("Opérateur non reconnu");
         };
     }
@@ -231,11 +243,16 @@ public class AnalyseurSyntaxique {
      *
      * @return
      */
-    private Expression analyseOperande() throws ErreurSyntaxique {
+    private Expression analyseOperande() throws ErreurSyntaxique, ErreurSementique {
         if (estCsteEntiere()) {
             var nombre = new Nombre(parseInt(this.uniteCourante));
             this.uniteCourante = this.analex.next();
             return nombre;
+        }
+        if (estCsteBoolean()) {
+            var bool = new Boolean(this.uniteCourante);
+            this.uniteCourante = this.analex.next();
+            return bool;
         }
         if (estIdf()) {
             return this.analyseAcces();
@@ -265,12 +282,13 @@ public class AnalyseurSyntaxique {
         throw new ErreurSyntaxique("constante entière ou idf attendu");
     }
 
+
     /**
      * AFFECTATION → ACCES := EXPRESSION
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private Affectation analyseAffectation() throws ErreurSyntaxique {
+    private Affectation analyseAffectation() throws ErreurSyntaxique, ErreurSementique {
         Acces idf = this.analyseAcces();
         this.analyseTerminal(":=");
         var expression = analyseExpression();
@@ -283,7 +301,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private Acces analyseAcces() throws ErreurSyntaxique {
+    private Acces analyseAcces() throws ErreurSyntaxique, ErreurSementique {
         if (!this.estIdf()) {
             throw new ErreurSyntaxique("idf attendu");
         }
@@ -344,7 +362,17 @@ public class AnalyseurSyntaxique {
         }
     }
 
+    /**
+     * Vérifie si l'unité courante est une constante booléenne
+     *
+     * @return true si c'est une constante booléenne
+     */
+    private boolean estCsteBoolean() {
+        return this.uniteCourante.equals("vrai") || this.uniteCourante.equals("faux");
+    }
+
+
     private boolean estOperateur() {
-        return this.uniteCourante.equals("+") || this.uniteCourante.equals("-") || this.uniteCourante.equals("*");
+        return this.uniteCourante.equals("+") || this.uniteCourante.equals("-") || this.uniteCourante.equals("*") || this.uniteCourante.equals(">");
     }
 }

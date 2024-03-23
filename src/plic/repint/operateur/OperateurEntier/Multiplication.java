@@ -1,19 +1,13 @@
-package plic.repint.operateur;
+package plic.repint.operateur.OperateurEntier;
 
+import plic.repint.ErreurSementique;
 import plic.repint.Expression;
 
-/**
- * Operand à résultat entier
- */
-public class Somme extends Operateur {
+public class Multiplication extends OperateurEntier {
 
-    public Somme(Expression operandGauche, Expression operandDroite) {
+
+    public Multiplication(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
         super(operandGauche, operandDroite);
-    }
-
-    @Override
-    public String getTypes() {
-        return "somme";
     }
 
     @Override
@@ -25,8 +19,8 @@ public class Somme extends Operateur {
         sb.append("move $v1, $v0\n");
         sb.append("# Calcul de gauche dans $v0\n");
         sb.append(gauche.toMips());
-        sb.append("# Addition de $v0 et $v1\n");
-        sb.append("add $v0, $v0, $v1\n");
+        sb.append("# Multiplication de $v0 et $v1\n");
+        sb.append("mul $v0, $v0, $v1\n");
         return sb.toString();
     }
 }

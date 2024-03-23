@@ -1,15 +1,15 @@
-package plic.repint.operateur;
+package plic.repint.operateur.OperateurEntier;
 
+import plic.repint.ErreurSementique;
 import plic.repint.Expression;
 
-public class Soustraction extends Operateur {
-    public Soustraction(Expression operandGauche, Expression operandDroite) {
-        super(operandGauche, operandDroite);
-    }
+/**
+ * Operand à résultat entier
+ */
+public class Somme extends OperateurEntier {
 
-    @Override
-    public String getTypes() {
-        return "soustraction";
+    public Somme(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
+        super(operandGauche, operandDroite);
     }
 
     @Override
@@ -21,8 +21,8 @@ public class Soustraction extends Operateur {
         sb.append("move $v1, $v0\n");
         sb.append("# Calcul de gauche dans $v0\n");
         sb.append(gauche.toMips());
-        sb.append("# Soustraction de $v0 et $v1\n");
-        sb.append("sub $v0, $v0, $v1\n");
+        sb.append("# Addition de $v0 et $v1\n");
+        sb.append("add $v0, $v0, $v1\n");
         return sb.toString();
     }
 }

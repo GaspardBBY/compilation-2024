@@ -1,15 +1,14 @@
-package plic.repint.operateur;
+package plic.repint.operateur.OperateurBoolean;
 
 import plic.repint.Expression;
 
-public class Multiplication extends Operateur {
-    public Multiplication(Expression operandGauche, Expression operandDroite) {
-        super(operandGauche, operandDroite);
-    }
 
-    @Override
-    public String getTypes() {
-        return "multiplication";
+/**
+ * This class represents the greater than operator (>)
+ */
+public class Superieur extends OperateurBoolean {
+    public Superieur(Expression operandGauche, Expression operandDroite) {
+        super(operandGauche, operandDroite);
     }
 
     @Override
@@ -21,8 +20,8 @@ public class Multiplication extends Operateur {
         sb.append("move $v1, $v0\n");
         sb.append("# Calcul de gauche dans $v0\n");
         sb.append(gauche.toMips());
-        sb.append("# Multiplication de $v0 et $v1\n");
-        sb.append("mul $v0, $v0, $v1\n");
+        sb.append("# Comparaison de $v0 et $v1\n");
+        sb.append("sgt $v0, $v0, $v1\n");
         return sb.toString();
     }
 }
