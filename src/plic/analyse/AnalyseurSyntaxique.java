@@ -2,13 +2,17 @@ package plic.analyse;
 
 import plic.repint.Boolean;
 import plic.repint.*;
-import plic.repint.operateur.OperateurBoolean.Superieur;
+import plic.repint.operateur.OperateurDeComparaison.*;
 import plic.repint.operateur.OperateurEntier.Multiplication;
 import plic.repint.operateur.OperateurEntier.Somme;
 import plic.repint.operateur.OperateurEntier.Soustraction;
+import plic.repint.operateur.OperateurLogique.Et;
+import plic.repint.operateur.OperateurLogique.Ou;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Map;
+import java.util.Set;
 
 import static java.lang.Integer.parseInt;
 
@@ -207,31 +211,17 @@ public class AnalyseurSyntaxique {
         return new Ecrire(expression);
     }
 
-    /**
-     * EXPRESSION → OPERANDE
-     *
-     * @throws ErreurSyntaxique Si non conforme
-     *                          Ne fait pas de vérification sur la fin de l'expression (comme ";")
-     */
-    private Expression analyseExpression() throws ErreurSyntaxique, ErreurSementique {
-        if (logger) System.out.println("Analyse expression");
-        Expression operandGauche = this.analyseOperande();
-        if (!estOperateur()) {
-            return operandGauche;
-        }
-
-        String operateur = this.uniteCourante;
-        this.uniteCourante = this.analex.next();
-        Expression operandDroite = this.analyseOperande();
-
-        return switch (operateur) {
-            case "+" -> new Somme(operandGauche, operandDroite);
-            case "-" -> new Soustraction(operandGauche, operandDroite);
-            case "*" -> new Multiplication(operandGauche, operandDroite);
-            case ">" -> new Superieur(operandGauche, operandDroite);
-            default -> throw new ErreurSyntaxique("Opérateur non reconnu");
-        };
-    }
+    private static final Map<String, Class<?>> OPERATOR_CLASS_MAP = Map.of(
+            "+", Somme.class,
+            "-", Soustraction.class,
+            "*", Multiplication.class,
+            "et", Et.class,
+            "ou", Ou.class,
+            "<", Inferieur.class,
+            ">", Superieur.class
+    );
+    //+ | - | * | et | ou | < | > | = | # | <= | >=
+    private static final Set<String> OPERATORS = Set.of("+", "-", "*", "et", "ou", "<", ">", "=", "#", "<=", ">=");
 
     /**
      * OPERANDE →
@@ -371,8 +361,39 @@ public class AnalyseurSyntaxique {
         return this.uniteCourante.equals("vrai") || this.uniteCourante.equals("faux");
     }
 
+    /**
+     * EXPRESSION → OPERANDE
+     *
+     * @throws ErreurSyntaxique Si non conforme
+     *                          Ne fait pas de vérification sur la fin de l'expression (comme ";")
+     */
+    private Expression analyseExpression() throws ErreurSyntaxique, ErreurSementique {
+        if (logger) System.out.println("Analyse expression");
+        Expression operandGauche = this.analyseOperande();
+        if (!estOperateur()) {
+            return operandGauche;
+        }
+
+        String operateur = this.uniteCourante;
+        this.uniteCourante = this.analex.next();
+        Expression operandDroite = this.analyseOperande();
+        return switch (operateur) {
+            case "+" -> new Somme(operandGauche, operandDroite);
+            case "-" -> new Soustraction(operandGauche, operandDroite);
+            case "*" -> new Multiplication(operandGauche, operandDroite);
+            case "et" -> new Et(operandGauche, operandDroite);
+            case "ou" -> new Ou(operandGauche, operandDroite);
+            case "<" -> new Inferieur(operandGauche, operandDroite);
+            case ">" -> new Superieur(operandGauche, operandDroite);
+            case "=" -> new Equals(operandGauche, operandDroite);
+            case "#" -> throw new ErreurSyntaxique("Opérateur pas implémenté");
+            case "<=" -> new InferieurEgal(operandGauche, operandDroite);
+            case ">=" -> new SuperieurEgal(operandGauche, operandDroite);
+            default -> throw new ErreurSyntaxique("Opérateur non reconnu");
+        };
+    }
 
     private boolean estOperateur() {
-        return this.uniteCourante.equals("+") || this.uniteCourante.equals("-") || this.uniteCourante.equals("*") || this.uniteCourante.equals(">");
+        return OPERATORS.contains(this.uniteCourante);
     }
 }

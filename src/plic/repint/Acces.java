@@ -12,8 +12,11 @@ public abstract class Acces extends Expression {
 
     public abstract String getIdf();
 
-    public String getTypeSymbole() {
+    public String getTypeSymbole() throws ErreurSementique {
         Symbole symbole = TDS.getInstance().getSymbole(getIdf());
+        if (symbole == null) {
+            throw new ErreurSementique("(Variable " + getIdf() + " non déclarée)");
+        }
         return symbole.getType();
     }
 

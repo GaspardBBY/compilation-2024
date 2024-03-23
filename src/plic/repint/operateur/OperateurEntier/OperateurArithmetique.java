@@ -8,11 +8,9 @@ import plic.repint.operateur.Operateur;
 /**
  * opérandes et résultat entier
  */
-public abstract class OperateurEntier extends Operateur {
-    public OperateurEntier(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
+public abstract class OperateurArithmetique extends Operateur {
+    public OperateurArithmetique(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
         super(operandGauche, operandDroite);
-        verifierOperande(operandGauche);
-        verifierOperande(operandDroite);
     }
 
     @Override
@@ -22,12 +20,13 @@ public abstract class OperateurEntier extends Operateur {
 
     public void verifierOperande(Expression operand) throws ErreurSementique {
         if (operand instanceof Acces) {
-            if (!((Acces) operand).getTypes().equals("entier")) {
-                throw new ErreurSementique("Erreur : l'opérande qui est un acces n'est pas un entier");
+            if (!((Acces) operand).getTypeSymbole().equals("entier")) {
+                throw new ErreurSementique("impossible d'effectuer une opération arithmétique sur un accès qui n'est pas un entier");
             }
+            return;
         }
         if (!operand.getTypes().equals("entier")) {
-            throw new ErreurSementique("Erreur : l'opérande n'est pas un acces n'est pas un entier");
+            throw new ErreurSementique("impossible d'effectuer une opération arithmétique sur une expression qui n'est pas un entier");
         }
     }
 

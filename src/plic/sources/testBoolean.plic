@@ -1,0 +1,8 @@
+programme testboo {
+    entier b ;
+    b := 5 ;
+    b := 5 * 5 ;
+    ecrire b ;
+    ecrire 2 + 5 ;
+    ecrire b + 5 ;
+}

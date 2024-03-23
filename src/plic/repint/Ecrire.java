@@ -18,10 +18,10 @@ public class Ecrire extends Instruction {
      */
     @Override
     public void verifier() throws ErreurSementique {
-        if (exp.getTypes().equals("nombre")) return;
+        System.out.println("Verifier Ecrire");
+        if (exp.getTypes().equals("entier") || exp.getTypes().equals("boolean")) return;
         if (TDS.getSymbole(((Acces) exp).getIdf()) == null)
             throw new ErreurSementique("Variable " + exp.toString() + " non déclarée, impossible de l'afficher !");
-
 
     }
 
