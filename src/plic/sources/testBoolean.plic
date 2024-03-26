@@ -5,4 +5,6 @@ programme testboo {
     ecrire b ;
     ecrire 2 + 5 ;
     ecrire b + 5 ;
+    b := - ( b - 5 ) ;
+    ecrire non vrai et faux ;
 }

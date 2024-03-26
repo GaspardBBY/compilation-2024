@@ -14,6 +14,12 @@ public abstract class Operateur extends Expression {
         this.droite = operandDroite;
     }
 
+    public Operateur(Expression uniqueOperateur) throws ErreurSementique {
+        verifierOperande(uniqueOperateur);
+        this.gauche = uniqueOperateur;
+        this.droite = null;
+    }
+
     public abstract void verifierOperande(Expression operand) throws ErreurSementique;
 
     @Override
@@ -29,13 +35,19 @@ public abstract class Operateur extends Expression {
     @Override
     public String toMips() {
         var sb = new StringBuilder();
-        sb.append("# Calcul de droite dans $v0\n");
-        sb.append(droite.toMips());
-        sb.append("# Sauvegarde de $v0 dans $v1\n");
-        sb.append("move $v1, $v0\n");
-        sb.append("# Calcul de gauche dans $v0\n");
-        sb.append(gauche.toMips());
-        sb.append("# Operation de $v0 et $v1\n");
+        if (droite == null) {
+            sb.append("# Calcul de l'opérande unique\n");
+            sb.append(gauche.toMips());
+        } else {
+            sb.append("# Calcul de droite dans $v0\n");
+            sb.append(droite.toMips());
+            sb.append("# Sauvegarde de $v0 dans $v1\n");
+            sb.append("move $v1, $v0\n");
+            sb.append("# Calcul de gauche dans $v0\n");
+            sb.append(gauche.toMips());
+            sb.append("# Operation de $v0 et $v1\n");
+        }
+
         sb.append(toMipsOperation());
         return sb.toString();
     }

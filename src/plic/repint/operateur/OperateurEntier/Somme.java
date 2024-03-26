@@ -14,7 +14,7 @@ public class Somme extends OperateurArithmetique {
 
     @Override
     public String toMipsOperation() {
-        return "add $v0, $v0, $v1";
+        return "add $v0, $v0, $v1\n";
     }
 
 }

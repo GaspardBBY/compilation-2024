@@ -1,0 +1,10 @@
+programme testboo {
+    boolean a ;
+    a := vrai ;
+    a := vrai et a ;
+    ecrire a ;
+    ecrire non a ;
+    a := non vrai et a ;
+    ecrire a ;
+    ecrire non a ;
+}

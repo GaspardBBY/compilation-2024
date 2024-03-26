@@ -13,6 +13,10 @@ public abstract class OperateurLogique extends Operateur {
         super(operandGauche, operandDroite);
     }
 
+    public OperateurLogique(Expression uniqueOperand) throws ErreurSementique {
+        super(uniqueOperand);
+    }
+
     @Override
     public String getTypes() {
         return "boolean";

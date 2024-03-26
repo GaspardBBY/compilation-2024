@@ -7,11 +7,11 @@ import plic.repint.operateur.OperateurEntier.Multiplication;
 import plic.repint.operateur.OperateurEntier.Somme;
 import plic.repint.operateur.OperateurEntier.Soustraction;
 import plic.repint.operateur.OperateurLogique.Et;
+import plic.repint.operateur.OperateurLogique.Non;
 import plic.repint.operateur.OperateurLogique.Ou;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Map;
 import java.util.Set;
 
 import static java.lang.Integer.parseInt;
@@ -211,16 +211,7 @@ public class AnalyseurSyntaxique {
         return new Ecrire(expression);
     }
 
-    private static final Map<String, Class<?>> OPERATOR_CLASS_MAP = Map.of(
-            "+", Somme.class,
-            "-", Soustraction.class,
-            "*", Multiplication.class,
-            "et", Et.class,
-            "ou", Ou.class,
-            "<", Inferieur.class,
-            ">", Superieur.class
-    );
-    //+ | - | * | et | ou | < | > | = | # | <= | >=
+
     private static final Set<String> OPERATORS = Set.of("+", "-", "*", "et", "ou", "<", ">", "=", "#", "<=", ">=");
 
     /**
@@ -244,29 +235,27 @@ public class AnalyseurSyntaxique {
             this.uniteCourante = this.analex.next();
             return bool;
         }
-        if (estIdf()) {
-            return this.analyseAcces();
-        }
-        if (this.uniteCourante.equals("-")) {
-            this.uniteCourante = this.analex.next();
-            this.analyseTerminal("(");
-            var expression = this.analyseExpression();
-            this.analyseTerminal(")");
-            throw new ErreurSyntaxique("Opérateur non implémenté");
-//            return new Negation(expression);
-        }
+        //! non can be an idf
         if (this.uniteCourante.equals("non")) {
             this.uniteCourante = this.analex.next();
             var expression = this.analyseExpression();
-//            this.analyseTerminal(); ON DOIT VERIFIER QUELQUE CHOSE
-            throw new ErreurSyntaxique("Opérateur non implémenté");
-//            return new Non(expression);
+            return new Non(expression);
         }
         if (this.uniteCourante.equals("(")) {
             this.uniteCourante = this.analex.next();
             var expression = this.analyseExpression();
             this.analyseTerminal(")");
             return expression;
+        }
+        if (this.uniteCourante.equals("-")) {
+            this.uniteCourante = this.analex.next();
+            this.analyseTerminal("(");
+            var expression = this.analyseExpression();
+            this.analyseTerminal(")");
+            return new Soustraction(expression);
+        }
+        if (estIdf()) {
+            return this.analyseAcces();
         }
 
         throw new ErreurSyntaxique("constante entière ou idf attendu");

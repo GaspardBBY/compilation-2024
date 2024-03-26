@@ -8,8 +8,16 @@ public class Soustraction extends OperateurArithmetique {
         super(operandGauche, operandDroite);
     }
 
+    public Soustraction(Expression uniqueOperand) throws ErreurSementique {
+        super(uniqueOperand);
+    }
+
     @Override
     public String toMipsOperation() {
-        return "sub $v0, $v0, $v1";
+        // if - ( expression )
+        if (super.droite == null) {
+            return "sub $v0, $zero, $v0";
+        }
+        return "sub $v0, $v0, $v1\n";
     }
 }

@@ -13,6 +13,10 @@ public abstract class OperateurArithmetique extends Operateur {
         super(operandGauche, operandDroite);
     }
 
+    public OperateurArithmetique(Expression uniqueOperand) throws ErreurSementique {
+        super(uniqueOperand);
+    }
+
     @Override
     public String getTypes() {
         return "entier";
