@@ -14,6 +14,6 @@ public class SuperieurEgal extends OperateurDeComparaison {
 
     @Override
     public String toMipsOperation() {
-        return "sge $v0, $v1, $v0\n";
+        return "sge $v0, $v0, $v1\n";
     }
 }

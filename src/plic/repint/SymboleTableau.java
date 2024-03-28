@@ -24,7 +24,7 @@ public class SymboleTableau extends Symbole {
 
     @Override
     public String getType() {
-        return "tableau";
+        return "entier";
     }
 
     public int getTaille() {

@@ -16,7 +16,7 @@ public class Soustraction extends OperateurArithmetique {
     public String toMipsOperation() {
         // if - ( expression )
         if (super.droite == null) {
-            return "sub $v0, $zero, $v0";
+            return "sub $v0, $zero, $v0\n";
         }
         return "sub $v0, $v0, $v1\n";
     }

@@ -1,10 +1,9 @@
 programme testboo {
-    boolean a ;
-    a := vrai ;
-    a := vrai et a ;
-    ecrire a ;
-    ecrire non a ;
-    a := non vrai et a ;
-    ecrire a ;
-    ecrire non a ;
+    entier a ;
+    ecrire 4 > 5 ;
+    ecrire 4 < 5 ;
+    ecrire 5 >= 5 ;
+    ecrire 5 <= 5 ;
+    ecrire 5 >= 6 ;
+    ecrire 5 >= 6 ;
 }

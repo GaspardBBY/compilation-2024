@@ -24,6 +24,10 @@ public abstract class OperateurArithmetique extends Operateur {
 
     public void verifierOperande(Expression operand) throws ErreurSementique {
         if (operand instanceof Acces) {
+            System.out.println("types " + operand.getTypes());
+            if (operand.getTypes().equals("entier")) {
+                return;
+            }
             if (!((Acces) operand).getTypeSymbole().equals("entier")) {
                 throw new ErreurSementique("impossible d'effectuer une opération arithmétique sur un accès qui n'est pas un entier");
             }

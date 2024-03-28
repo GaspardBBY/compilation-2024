@@ -1,0 +1,40 @@
+programme test {
+    tableau [ 10 ] t1 ;
+    t1 [ 0 ] := 9 ;
+    t1 [ 1 ] := 8 ;
+    t1 [ 2 ] := 7 ;
+    t1 [ 3 ] := 6 ;
+    t1 [ 4 ] := 5 ;
+    t1 [ 5 ] := 4 ;
+    t1 [ 6 ] := 3 ;
+    t1 [ 7 ] := 2 ;
+    t1 [ 8 ] := 1 ;
+    t1 [ 9 ] := 0 ;
+    ecrire ( t1 [ 1 ] + t1 [ 5 ] ) ; // addition : 12
+    ecrire ( t1 [ 6 ] - t1 [ 0 ] ) ; // soustraction : -6
+    ecrire ( t1 [ 2 ] * t1 [ 4 ] ) ; // multiplication : 35
+    ecrire ( t1 [ 5 ] < t1 [ 5 ] ) ; // inferieur : 0
+    ecrire ( t1 [ 7 ] < t1 [ 6 ] ) ; // inferieur : 1
+    ecrire ( t1 [ 4 ] > t1 [ 3 ] ) ; // superieur : 0
+    ecrire ( t1 [ 7 ] > t1 [ 9 ] ) ; // superieur : 1
+    ecrire ( t1 [ 1 ] = t1 [ 2 ] ) ; // egalite : 0
+    ecrire ( t1 [ 1 ] = t1 [ 1 ] ) ; // egalite : 1
+    ecrire ( t1 [ 0 ] # t1 [ 0 ] ) ; // differents : 0
+    ecrire ( t1 [ 9 ] # t1 [ 0 ] ) ; // differents : 1
+    ecrire ( t1 [ 4 ] <= t1 [ 5 ] ) ; // inferieur ou egal : 0
+    ecrire ( t1 [ 5 ] <= t1 [ 5 ] ) ; // inferieur ou egal : 1
+    ecrire ( t1 [ 8 ] >= t1 [ 4 ] ) ; // superieur ou egal : 0
+    ecrire ( t1 [ 3 ] >= t1 [ 7 ] ) ; // superieur ou egal : 1
+
+    ecrire - ( t1 [ 3 ] ) ; // forme négative : -6
+    ecrire - ( t1 [ 6 ] - t1 [ 0 ] ) ; // forme négative 6
+
+    // sur booleen
+    ecrire ( t1 [ 1 ] = t1 [ 2 ] ) et ( t1 [ 7 ] < t1 [ 6 ] ) ; // et logique : 0
+    ecrire ( t1 [ 2 ] = t1 [ 2 ] ) et ( t1 [ 8 ] <= t1 [ 5 ] ) ; // et logique : 1
+    ecrire ( t1 [ 7 ] = t1 [ 9 ] ) ou ( t1 [ 7 ] > t1 [ 2 ] ) ; // ou logique : 0
+    ecrire ( t1 [ 7 ] > t1 [ 9 ] ) ou ( t1 [ 7 ] > t1 [ 2 ] ) ; // ou logique : 1
+    ecrire non ( ( t1 [ 7 ] > t1 [ 9 ] ) ou ( t1 [ 7 ] > t1 [ 2 ] ) ) ; // non logique : 0
+    ecrire non ( ( t1 [ 7 ] > t1 [ 9 ] ) et ( t1 [ 7 ] > t1 [ 2 ] ) ) ; // non logique : 1
+
+}

@@ -27,6 +27,10 @@ public class Affectation extends Instruction {
     public void verifier() throws ErreurSementique {
         boolean contained = TDS.getSymbole(acces.getIdf()) != null;
         var symbole = TDS.getSymbole(acces.getIdf());
+
+        System.out.println("symbole : " + symbole.getType());
+        System.out.println("type : " + exp.getTypes());
+
         if (!symbole.getType().equals(exp.getTypes()))
             throw new ErreurSementique(": impossible d'affecter un " + exp.getTypes() + " à un " + symbole.getType());
         if (!contained) {

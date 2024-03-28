@@ -20,6 +20,9 @@ public abstract class OperateurDeComparaison extends Operateur {
 
     public void verifierOperande(Expression operand) throws ErreurSementique {
         if (operand instanceof Acces) {
+            if (operand.getTypes().equals("entier")) {
+                return;
+            }
             if (!((Acces) operand).getTypeSymbole().equals("entier")) {
                 throw new ErreurSementique("l'opérande qui est un acces n'est pas un entier");
             }

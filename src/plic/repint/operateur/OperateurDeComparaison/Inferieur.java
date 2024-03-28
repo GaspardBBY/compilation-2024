@@ -14,6 +14,6 @@ public class Inferieur extends OperateurDeComparaison {
 
     @Override
     public String toMipsOperation() {
-        return "slt $v0, $v1, $v0\n";
+        return "slt $v0, $v0, $v1\n";
     }
 }

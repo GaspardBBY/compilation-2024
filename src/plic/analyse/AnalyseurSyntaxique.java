@@ -375,7 +375,7 @@ public class AnalyseurSyntaxique {
             case "<" -> new Inferieur(operandGauche, operandDroite);
             case ">" -> new Superieur(operandGauche, operandDroite);
             case "=" -> new Equals(operandGauche, operandDroite);
-            case "#" -> throw new ErreurSyntaxique("Opérateur pas implémenté");
+            case "#" -> new NotEquals(operandGauche, operandDroite);
             case "<=" -> new InferieurEgal(operandGauche, operandDroite);
             case ">=" -> new SuperieurEgal(operandGauche, operandDroite);
             default -> throw new ErreurSyntaxique("Opérateur non reconnu");

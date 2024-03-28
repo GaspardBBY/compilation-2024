@@ -17,7 +17,7 @@ public class AccesTableau extends Acces {
 
     @Override
     public String getTypes() {
-        return "tableau";
+        return "entier";
     }
 
     @Override

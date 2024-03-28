@@ -11,10 +11,8 @@ public class Non extends OperateurLogique {
     @Override
     public String toMipsOperation() {
         var sb = new StringBuilder();
-        //Load -1 into another register, then XOR the registers.
-        sb.append("li $v1, -1\n");
-        sb.append("xor $v0, $v0, $v1\n");
+        sb.append("nor $v0, $v0, $v0\n");
+        sb.append("xori $v0, $v0, -2\n");
         return sb.toString();
-//        return "nor $v0, $v0\n";
     }
 }

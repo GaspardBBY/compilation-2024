@@ -7,13 +7,13 @@ import plic.repint.Expression;
 /**
  * This class represents the greater than operator (>)
  */
-public class Equals extends OperateurDeComparaison {
-    public Equals(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
+public class NotEquals extends OperateurDeComparaison {
+    public NotEquals(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
         super(operandGauche, operandDroite);
     }
 
     @Override
     public String toMipsOperation() {
-        return "seq $v0, $v0, $v1\n";
+        return "sne $v0, $v0, $v1\n";
     }
 }

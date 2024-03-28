@@ -32,6 +32,9 @@ public abstract class OperateurLogique extends Operateur {
     @Override
     public void verifierOperande(Expression operand) throws ErreurSementique {
         if (operand instanceof Acces) {
+            if (operand.getTypes().equals("boolean")) {
+                return;
+            }
             if (!((Acces) operand).getTypeSymbole().equals("boolean")) {
                 throw new ErreurSementique("l'opérande qui est un acces n'est pas un boolean");
             }
