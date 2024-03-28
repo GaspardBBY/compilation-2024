@@ -1,6 +1,6 @@
 package plic.repint.operateur.OperateurDeComparaison;
 
-import plic.repint.ErreurSementique;
+import plic.repint.ErreurSemantique;
 import plic.repint.Expression;
 
 
@@ -8,7 +8,7 @@ import plic.repint.Expression;
  * This class represents the greater than operator (>)
  */
 public class Equals extends OperateurDeComparaison {
-    public Equals(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
+    public Equals(Expression operandGauche, Expression operandDroite) throws ErreurSemantique {
         super(operandGauche, operandDroite);
     }
 

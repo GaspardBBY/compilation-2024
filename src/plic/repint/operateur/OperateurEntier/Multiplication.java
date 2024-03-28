@@ -1,12 +1,12 @@
 package plic.repint.operateur.OperateurEntier;
 
-import plic.repint.ErreurSementique;
+import plic.repint.ErreurSemantique;
 import plic.repint.Expression;
 
 public class Multiplication extends OperateurArithmetique {
 
 
-    public Multiplication(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
+    public Multiplication(Expression operandGauche, Expression operandDroite) throws ErreurSemantique {
         super(operandGauche, operandDroite);
     }
 

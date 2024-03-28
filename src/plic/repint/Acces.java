@@ -6,16 +6,16 @@ public abstract class Acces extends Expression {
         return null;
     }
 
-    public abstract void verifier() throws ErreurSementique;
+    public abstract void verifier() throws ErreurSemantique;
 
     public abstract String getTypes();
 
     public abstract String getIdf();
 
-    public String getTypeSymbole() throws ErreurSementique {
+    public String getTypeSymbole() throws ErreurSemantique {
         Symbole symbole = TDS.getInstance().getSymbole(getIdf());
         if (symbole == null) {
-            throw new ErreurSementique("(Variable " + getIdf() + " non déclarée)");
+            throw new ErreurSemantique("(Variable " + getIdf() + " non déclarée)");
         }
         return symbole.getType();
     }

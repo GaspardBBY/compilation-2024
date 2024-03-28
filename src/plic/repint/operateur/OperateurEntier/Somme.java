@@ -1,6 +1,6 @@
 package plic.repint.operateur.OperateurEntier;
 
-import plic.repint.ErreurSementique;
+import plic.repint.ErreurSemantique;
 import plic.repint.Expression;
 
 /**
@@ -8,7 +8,7 @@ import plic.repint.Expression;
  */
 public class Somme extends OperateurArithmetique {
 
-    public Somme(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
+    public Somme(Expression operandGauche, Expression operandDroite) throws ErreurSemantique {
         super(operandGauche, operandDroite);
     }
 

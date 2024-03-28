@@ -1,0 +1,5 @@
+programme plic {
+    entier a ;
+    a := 5 < 9 ;
+    ecrire a ;
+}

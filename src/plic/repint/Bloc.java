@@ -20,9 +20,9 @@ public class Bloc {
     /**
      * Vérifie que toutes les instructions du bloc sont correctes
      *
-     * @throws ErreurSementique si une erreur est soulevée, on la propage
+     * @throws ErreurSemantique si une erreur est soulevée, on la propage
      */
-    public void verifier() throws ErreurSementique {
+    public void verifier() throws ErreurSemantique {
         for (Instruction i : this.instructions) {
             i.verifier();
         }

@@ -1,14 +1,14 @@
 package plic.repint.operateur.OperateurEntier;
 
-import plic.repint.ErreurSementique;
+import plic.repint.ErreurSemantique;
 import plic.repint.Expression;
 
 public class Soustraction extends OperateurArithmetique {
-    public Soustraction(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
+    public Soustraction(Expression operandGauche, Expression operandDroite) throws ErreurSemantique {
         super(operandGauche, operandDroite);
     }
 
-    public Soustraction(Expression uniqueOperand) throws ErreurSementique {
+    public Soustraction(Expression uniqueOperand) throws ErreurSemantique {
         super(uniqueOperand);
     }
 

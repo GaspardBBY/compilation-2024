@@ -21,21 +21,18 @@ public class Affectation extends Instruction {
     /**
      * Vérification que si l'expression est une variable, elle est déclarée
      *
-     * @throws ErreurSementique si on tente d'affecter une valeur à une variable non déclarée
+     * @throws ErreurSemantique si on tente d'affecter une valeur à une variable non déclarée
      */
     @Override
-    public void verifier() throws ErreurSementique {
+    public void verifier() throws ErreurSemantique {
         boolean contained = TDS.getSymbole(acces.getIdf()) != null;
         var symbole = TDS.getSymbole(acces.getIdf());
-
-        System.out.println("symbole : " + symbole.getType());
-        System.out.println("type : " + exp.getTypes());
-
-        if (!symbole.getType().equals(exp.getTypes()))
-            throw new ErreurSementique(": impossible d'affecter un " + exp.getTypes() + " à un " + symbole.getType());
+        if (!acces.getTypes().equals(exp.getTypes()))
+            throw new ErreurSemantique(": impossible d'affecter un " + exp.getTypes() + " à un " + symbole.getType());
         if (!contained) {
-            throw new ErreurSementique("Variable " + acces.toString() + " non déclarée");
+            throw new ErreurSemantique("Variable " + acces.toString() + " non déclarée");
         }
+        acces.verifier();
     }
 
     @Override

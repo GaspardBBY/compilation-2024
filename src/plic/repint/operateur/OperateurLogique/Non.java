@@ -1,10 +1,10 @@
 package plic.repint.operateur.OperateurLogique;
 
-import plic.repint.ErreurSementique;
+import plic.repint.ErreurSemantique;
 import plic.repint.Expression;
 
 public class Non extends OperateurLogique {
-    public Non(Expression uniqueOperand) throws ErreurSementique {
+    public Non(Expression uniqueOperand) throws ErreurSemantique {
         super(uniqueOperand);
     }
 

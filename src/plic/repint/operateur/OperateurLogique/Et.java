@@ -1,10 +1,10 @@
 package plic.repint.operateur.OperateurLogique;
 
-import plic.repint.ErreurSementique;
+import plic.repint.ErreurSemantique;
 import plic.repint.Expression;
 
 public class Et extends OperateurLogique {
-    public Et(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
+    public Et(Expression operandGauche, Expression operandDroite) throws ErreurSemantique {
         super(operandGauche, operandDroite);
     }
 

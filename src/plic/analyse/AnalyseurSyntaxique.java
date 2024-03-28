@@ -29,7 +29,7 @@ public class AnalyseurSyntaxique {
         }
     }
 
-    public Bloc analyse() throws ErreurSyntaxique, DoubleDeclaration, ErreurSementique {
+    public Bloc analyse() throws ErreurSyntaxique, DoubleDeclaration, ErreurSemantique {
         // Demander la construction de la première unité lexicale
         this.uniteCourante = this.analex.next();
         Bloc blocCourant = new Bloc();
@@ -44,7 +44,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private void analyseProg(Bloc blocCourant) throws ErreurSyntaxique, DoubleDeclaration, ErreurSementique {
+    private void analyseProg(Bloc blocCourant) throws ErreurSyntaxique, DoubleDeclaration, ErreurSemantique {
         if (!this.uniteCourante.equals("programme"))
             throw new ErreurSyntaxique("programme attendu");
         this.uniteCourante = this.analex.next();
@@ -60,7 +60,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private void analyseBloc(Bloc blocCourant) throws ErreurSyntaxique, DoubleDeclaration, ErreurSementique {
+    private void analyseBloc(Bloc blocCourant) throws ErreurSyntaxique, DoubleDeclaration, ErreurSemantique {
         if (logger) System.out.println("\tAnalyse du bloc");
         this.analyseTerminal("{");
         // Itérer sur analyseDeclaration tant qu’il y a des déclarations
@@ -182,7 +182,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private void analyseInstruction(Bloc blocCourant) throws ErreurSyntaxique, ErreurSementique {
+    private void analyseInstruction(Bloc blocCourant) throws ErreurSyntaxique, ErreurSemantique {
         if (logger) System.out.println("\tAnalyse d'une instruction");
         if (this.uniteCourante.equals("ecrire")) {
             if (logger) System.out.println("\t\tAnalyse d'une ES");
@@ -202,7 +202,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private Instruction analyseES() throws ErreurSyntaxique, ErreurSementique {
+    private Instruction analyseES() throws ErreurSyntaxique, ErreurSemantique {
         this.analyseTerminal("ecrire");
         if (logger) System.out.println("\t\tAnalyse ES");
         var expression = this.analyseExpression();
@@ -224,7 +224,7 @@ public class AnalyseurSyntaxique {
      *
      * @return
      */
-    private Expression analyseOperande() throws ErreurSyntaxique, ErreurSementique {
+    private Expression analyseOperande() throws ErreurSyntaxique, ErreurSemantique {
         if (estCsteEntiere()) {
             var nombre = new Nombre(parseInt(this.uniteCourante));
             this.uniteCourante = this.analex.next();
@@ -267,7 +267,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private Affectation analyseAffectation() throws ErreurSyntaxique, ErreurSementique {
+    private Affectation analyseAffectation() throws ErreurSyntaxique, ErreurSemantique {
         Acces idf = this.analyseAcces();
         this.analyseTerminal(":=");
         var expression = analyseExpression();
@@ -280,7 +280,7 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private Acces analyseAcces() throws ErreurSyntaxique, ErreurSementique {
+    private Acces analyseAcces() throws ErreurSyntaxique, ErreurSemantique {
         if (!this.estIdf()) {
             throw new ErreurSyntaxique("idf attendu");
         }
@@ -356,7 +356,7 @@ public class AnalyseurSyntaxique {
      * @throws ErreurSyntaxique Si non conforme
      *                          Ne fait pas de vérification sur la fin de l'expression (comme ";")
      */
-    private Expression analyseExpression() throws ErreurSyntaxique, ErreurSementique {
+    private Expression analyseExpression() throws ErreurSyntaxique, ErreurSemantique {
         if (logger) System.out.println("Analyse expression");
         Expression operandGauche = this.analyseOperande();
         if (!estOperateur()) {

@@ -1,26 +1,26 @@
 package plic.repint.operateur;
 
-import plic.repint.ErreurSementique;
+import plic.repint.ErreurSemantique;
 import plic.repint.Expression;
 
 public abstract class Operateur extends Expression {
     public Expression gauche;
     public Expression droite;
 
-    public Operateur(Expression operandGauche, Expression operandDroite) throws ErreurSementique {
+    public Operateur(Expression operandGauche, Expression operandDroite) throws ErreurSemantique {
         verifierOperande(operandGauche);
         this.gauche = operandGauche;
         verifierOperande(operandDroite);
         this.droite = operandDroite;
     }
 
-    public Operateur(Expression uniqueOperateur) throws ErreurSementique {
+    public Operateur(Expression uniqueOperateur) throws ErreurSemantique {
         verifierOperande(uniqueOperateur);
         this.gauche = uniqueOperateur;
         this.droite = null;
     }
 
-    public abstract void verifierOperande(Expression operand) throws ErreurSementique;
+    public abstract void verifierOperande(Expression operand) throws ErreurSemantique;
 
     @Override
     public String toString() {

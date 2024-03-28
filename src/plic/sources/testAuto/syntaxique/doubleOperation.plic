@@ -1,0 +1,6 @@
+programme tableauManip {
+       entier a ;
+       entier b ;
+       a := 10 ;
+       b := a - 2 - 8 ;
+    }
