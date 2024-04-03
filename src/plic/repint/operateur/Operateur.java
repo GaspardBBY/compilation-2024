@@ -20,6 +20,19 @@ public abstract class Operateur extends Expression {
         this.droite = null;
     }
 
+    public Operateur() {
+        this.gauche = null;
+        this.droite = null;
+    }
+
+    public void setGauche(Expression gauche) {
+        this.gauche = gauche;
+    }
+
+    public void setDroit(Expression droite) {
+        this.droite = droite;
+    }
+
     public abstract void verifierOperande(Expression operand) throws ErreurSemantique;
 
     @Override
@@ -51,4 +64,5 @@ public abstract class Operateur extends Expression {
         sb.append(toMipsOperation());
         return sb.toString();
     }
+
 }

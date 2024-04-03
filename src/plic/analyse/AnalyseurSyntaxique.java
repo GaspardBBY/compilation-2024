@@ -2,13 +2,14 @@ package plic.analyse;
 
 import plic.repint.Boolean;
 import plic.repint.*;
-import plic.repint.operateur.OperateurDeComparaison.*;
-import plic.repint.operateur.OperateurEntier.Multiplication;
+import plic.repint.grammaire.Facteur;
+import plic.repint.grammaire.Oprel;
+import plic.repint.grammaire.SuiteTerme;
+import plic.repint.grammaire.Terme;
+import plic.repint.operateur.Operateur;
 import plic.repint.operateur.OperateurEntier.Somme;
 import plic.repint.operateur.OperateurEntier.Soustraction;
-import plic.repint.operateur.OperateurLogique.Et;
 import plic.repint.operateur.OperateurLogique.Non;
-import plic.repint.operateur.OperateurLogique.Ou;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -357,30 +358,92 @@ public class AnalyseurSyntaxique {
      *                          Ne fait pas de vérification sur la fin de l'expression (comme ";")
      */
     private Expression analyseExpression() throws ErreurSyntaxique, ErreurSemantique {
-        if (logger) System.out.println("Analyse expression");
-        Expression operandGauche = this.analyseOperande();
-        if (!estOperateur()) {
-            return operandGauche;
-        }
+        Expression g = this.analyseTerme();
+        Expression e = this.analyseSuiteExp(g);
+        return (e == null) ? g : e;
+    }
 
-        String operateur = this.uniteCourante;
+    Expression analyseSuiteExp(Expression gauche) throws ErreurSemantique, ErreurSyntaxique {
+        Operateur res = analyseOpad();
+        if (res == null) return null;
+        Expression droit = analyseTerme();
+        res.setGauche(gauche);
+        res.setDroit(droit);
+        return analyseSuiteExp(res);
+    }
+
+    private Expression analyseTerme() throws ErreurSemantique, ErreurSyntaxique {
+        Facteur f = analyseFacteur();
+        SuiteTerme st = analyseSuiteTerme(f);
+        return new Terme(f, st);
+    }
+
+    private SuiteTerme analyseSuiteTerme(Facteur f) throws ErreurSemantique, ErreurSyntaxique {
+        String op = this.uniteCourante;
+        if (estOperateurMult()) {
+            this.uniteCourante = this.analex.next();
+            Facteur facteur = analyseFacteur();
+            SuiteTerme suiteTerme = analyseSuiteTerme(facteur);
+            return new SuiteTerme(op, facteur, suiteTerme);
+        }
+        return null;
+    }
+
+
+    private Facteur analyseFacteur() throws ErreurSemantique, ErreurSyntaxique {
+        //FACTEUR → OPERANDE OPREL OPERANDE | OPERANDE
+        Expression operandeG = analyseOperande();
+        if (estOperel()) {
+            Oprel oprel = analyseOprel();
+            Expression operandeD = analyseOperande();
+            return new Facteur(operandeG, oprel, operandeD);
+        }
+        return new Facteur(operandeG);
+    }
+
+    private Oprel analyseOprel() throws ErreurSemantique {
+        String op = this.uniteCourante;
         this.uniteCourante = this.analex.next();
-        Expression operandDroite = this.analyseOperande();
-        return switch (operateur) {
-            case "+" -> new Somme(operandGauche, operandDroite);
-            case "-" -> new Soustraction(operandGauche, operandDroite);
-            case "*" -> new Multiplication(operandGauche, operandDroite);
-            case "et" -> new Et(operandGauche, operandDroite);
-            case "ou" -> new Ou(operandGauche, operandDroite);
-            case "<" -> new Inferieur(operandGauche, operandDroite);
-            case ">" -> new Superieur(operandGauche, operandDroite);
-            case "=" -> new Equals(operandGauche, operandDroite);
-            case "#" -> new NotEquals(operandGauche, operandDroite);
-            case "<=" -> new InferieurEgal(operandGauche, operandDroite);
-            case ">=" -> new SuperieurEgal(operandGauche, operandDroite);
-            default -> throw new ErreurSyntaxique("Opérateur non reconnu");
+        return switch (op) {
+            case "<" -> Oprel.LT;
+            case ">" -> Oprel.GT;
+            case "=" -> Oprel.EQ;
+            case "#" -> Oprel.NE;
+            case "<=" -> Oprel.LE;
+            case ">=" -> Oprel.GE;
+            default -> throw new ErreurSemantique("Opérateur de comparaison non reconnu");
         };
     }
+
+    private boolean estOperel() {
+        var uniteCourante = this.uniteCourante;
+        return switch (uniteCourante) {
+            case "<", ">", "=", "#", "<=", ">=" -> true;
+            default -> false;
+        };
+    }
+
+    private boolean estOperateurMult() {
+        var uniteCourante = this.uniteCourante;
+        return switch (uniteCourante) {
+            case "*", "/", "et" -> true;
+            default -> false;
+        };
+    }
+
+    private Operateur analyseOpad() throws ErreurSemantique {
+        switch (this.uniteCourante) {
+            case "+":
+                this.uniteCourante = this.analex.next();
+                return new Somme(null, null);
+            case "-":
+                this.uniteCourante = this.analex.next();
+                return new Soustraction(null, null);
+            default:
+                return null;
+        }
+    }
+
 
     private boolean estOperateur() {
         return OPERATORS.contains(this.uniteCourante);
