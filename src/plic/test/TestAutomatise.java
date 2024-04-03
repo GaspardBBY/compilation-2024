@@ -7,10 +7,11 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+
 public class TestAutomatise {
     @Test
-    void testAnalyseSementique() {
-        File repertoire = new File("D:\\Dev\\compilation\\mips\\src\\plic\\sources\\testAuto\\sementique");
+    public void testAnalyseSementique() {
+        File repertoire = new File("src\\plic\\sources\\testAuto\\sementique");
         File[] files = repertoire.listFiles();
         assert files != null;
         for (File file : files) {
@@ -25,8 +26,8 @@ public class TestAutomatise {
     }
 
     @Test
-    void testAnalyseSyntaxique() {
-        File repertoire = new File("D:\\Dev\\compilation\\mips\\src\\plic\\sources\\testAuto\\syntaxique");
+    public void testAnalyseSyntaxique() {
+        File repertoire = new File("src\\plic\\sources\\testAuto\\syntaxique");
         File[] files = repertoire.listFiles();
         assert files != null;
         for (File file : files) {

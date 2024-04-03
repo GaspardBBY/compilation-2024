@@ -18,7 +18,6 @@ public class Ecrire extends Instruction {
      */
     @Override
     public void verifier() throws ErreurSemantique {
-        System.out.println("Verifier Ecrire");
         if (exp.getTypes().equals("entier") || exp.getTypes().equals("boolean")) return;
         if (TDS.getSymbole(((Acces) exp).getIdf()) == null)
             throw new ErreurSemantique("Variable " + exp.toString() + " non déclarée, impossible de l'afficher !");

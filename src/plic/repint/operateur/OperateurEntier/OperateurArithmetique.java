@@ -24,7 +24,6 @@ public abstract class OperateurArithmetique extends Operateur {
 
     public void verifierOperande(Expression operand) throws ErreurSemantique {
         if (operand instanceof Acces) {
-            System.out.println("types " + operand.getTypes());
             if (operand.getTypes().equals("entier")) {
                 return;
             }
