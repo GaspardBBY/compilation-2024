@@ -29,4 +29,6 @@ public abstract class Symbole {
 
     @Override
     public abstract String toString();
+
+    public abstract String getType();
 }

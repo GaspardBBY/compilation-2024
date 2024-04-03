@@ -17,7 +17,7 @@ public class AccesTableau extends Acces {
 
     @Override
     public String getTypes() {
-        return "tableau";
+        return "entier";
     }
 
     @Override
@@ -28,12 +28,16 @@ public class AccesTableau extends Acces {
     /**
      * Vérifie que l'identifiant est bien déclaré et que l'indice est bien dans les bornes du tableau
      *
-     * @throws ErreurSementique si l'identifiant n'est pas déclaré ou si l'indice est négatif ou hors limite
+     * @throws ErreurSemantique si l'identifiant n'est pas déclaré ou si l'indice est négatif ou hors limite
      */
     @Override
-    public void verifier() throws ErreurSementique {
+    public void verifier() throws ErreurSemantique {
         if (!TDS.getInstance().contain(new Entree(idf.getIdf()))) {
-            throw new ErreurSementique("Erreur : identifiant " + idf + " non déclaré");
+            throw new ErreurSemantique("Erreur : identifiant " + idf + " non déclaré");
+        }
+
+        if (!expression.getTypes().equals("entier")) {
+            throw new ErreurSemantique("l'indice du tableau doit être un entier");
         }
     }
 

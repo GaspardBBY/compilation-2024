@@ -1,0 +1,8 @@
+programme plic {
+    entier i ;
+    entier j ;
+    entier k ;
+
+    k := j > i ;
+
+}

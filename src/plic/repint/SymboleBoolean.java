@@ -1,7 +1,7 @@
 package plic.repint;
 
-public class SymboleEntier  extends Symbole{
-    public SymboleEntier(String type) {
+public class SymboleBoolean extends Symbole{
+    public SymboleBoolean(String type) {
         super(type);
     }
 
@@ -12,7 +12,7 @@ public class SymboleEntier  extends Symbole{
 
     @Override
     public String toString() {
-        return "SymboleEntier{" +
+        return "SymboleBoolean{" +
                 "type='" + type + '\'' +
                 ", deplacement=" + deplacement +
                 '}';
@@ -20,6 +20,6 @@ public class SymboleEntier  extends Symbole{
 
     @Override
     public String getType() {
-        return "entier";
+        return "boolean";
     }
 }

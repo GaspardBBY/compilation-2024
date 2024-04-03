@@ -1,0 +1,10 @@
+programme testSomme {
+    entier i ;
+    entier a ;
+    a := 5 ;
+    i := ( a + 3 ) + 10 ;
+    ecrire i ;
+    i := a * 2 ;
+    i := i - 1 ;
+    ecrire i ;
+}

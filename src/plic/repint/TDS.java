@@ -54,4 +54,8 @@ public class TDS {
     public static Symbole getSymbole(String idf) {
         return instance.map.get(new Entree(idf));
     }
+
+    public static void reset() {
+        instance = new TDS();
+    }
 }

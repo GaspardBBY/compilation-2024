@@ -1,0 +1,8 @@
+programme plic {
+    tableau [ 2 ] monTableau ;
+    entier i ;
+
+    i := 0 ;
+    i := monTableau ;
+
+}

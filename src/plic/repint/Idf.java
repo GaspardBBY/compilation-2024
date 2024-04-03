@@ -17,13 +17,14 @@ public class Idf extends Acces {
 
     @Override
     public String getTypes() {
-        return "idf";
+        var symbole = TDS.getSymbole(nom);
+        return symbole.getType();
     }
 
     @Override
-    public void verifier() throws ErreurSementique {
+    public void verifier() throws ErreurSemantique {
         if (!TDS.getInstance().contain(new Entree(nom))) {
-            throw new ErreurSementique("Erreur : identFifiant " + nom + " non déclaré");
+            throw new ErreurSemantique("Erreur : identFifiant " + nom + " non déclaré");
         }
     }
 

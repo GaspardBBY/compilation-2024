@@ -17,7 +17,7 @@ public class Nombre extends Expression {
 
     @Override
     public String getTypes() {
-        return "nombre";
+        return "entier";
     }
 
     public String toMips() {

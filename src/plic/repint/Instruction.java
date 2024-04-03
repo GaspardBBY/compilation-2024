@@ -6,7 +6,7 @@ package plic.repint;
 public abstract class Instruction {
     public abstract String toString();
 
-    public abstract void verifier() throws ErreurSementique;
+    public abstract void verifier() throws ErreurSemantique;
 
     public abstract String toMips();
 }

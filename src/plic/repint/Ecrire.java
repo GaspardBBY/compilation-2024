@@ -14,14 +14,13 @@ public class Ecrire extends Instruction {
     /**
      * Vérifie que l'expression est bien déclarée, si c'est une variable on vérifie qu'elle est bien déclarée
      *
-     * @throws ErreurSementique si l'expression n'est pas déclarée
+     * @throws ErreurSemantique si l'expression n'est pas déclarée
      */
     @Override
-    public void verifier() throws ErreurSementique {
-        if (exp.getTypes().equals("nombre")) return;
+    public void verifier() throws ErreurSemantique {
+        if (exp.getTypes().equals("entier") || exp.getTypes().equals("boolean")) return;
         if (TDS.getSymbole(((Acces) exp).getIdf()) == null)
-            throw new ErreurSementique("Variable " + exp.toString() + " non déclarée, impossible de l'afficher !");
-
+            throw new ErreurSemantique("Variable " + exp.toString() + " non déclarée, impossible de l'afficher !");
 
     }
 

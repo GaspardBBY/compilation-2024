@@ -4,7 +4,7 @@ import plic.analyse.AnalyseurSyntaxique;
 import plic.analyse.ErreurSyntaxique;
 import plic.repint.Bloc;
 import plic.repint.DoubleDeclaration;
-import plic.repint.ErreurSementique;
+import plic.repint.ErreurSemantique;
 import plic.repint.TDS;
 
 import java.io.File;
@@ -21,17 +21,19 @@ public class Plic {
                 throw new Error("ERREUR: Suffixe incorrect");
             }
             new Plic(fichier);
-        } catch (ErreurSyntaxique | DoubleDeclaration | ErreurSementique e ){
+        } catch (ErreurSyntaxique | DoubleDeclaration | ErreurSemantique e ){
             System.out.println(e.getMessage());
         }
     }
 
-    public Plic(String nomFichier) throws ErreurSyntaxique, DoubleDeclaration, ErreurSementique {
+    public Plic(String nomFichier) throws ErreurSyntaxique, DoubleDeclaration, ErreurSemantique {
+        TDS.reset();
         File file = new File(nomFichier);
         // Créer l’analyseur syntaxique
         AnalyseurSyntaxique as = new AnalyseurSyntaxique(file);
         // Analyse syntaxique du texte source
         Bloc bloc = as.analyse();
+//        System.out.println(bloc);
         bloc.verifier();
         System.out.println(bloc.toMips());
     }

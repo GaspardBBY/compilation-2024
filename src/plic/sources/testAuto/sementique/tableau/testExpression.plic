@@ -1,0 +1,6 @@
+programme plic {
+    tableau [ 2 ] b ;
+    tableau [ 4 ] j ;
+    j [ b ] := 1 ;
+    j [ b [ 1 ] ] := 2 ;
+}

@@ -1,0 +1,5 @@
+programme plic {
+    tableau [ 2 ] tab ;
+    tab := 4 ;
+
+}
