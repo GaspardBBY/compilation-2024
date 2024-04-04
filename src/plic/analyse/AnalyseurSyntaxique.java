@@ -217,7 +217,22 @@ public class AnalyseurSyntaxique {
 
                 break;
             case "pour":
-                throw new ErreurSemantique("Pour n'est pas encore implémenté");
+                if (logger) System.out.println("\t\tAnalyse d'un pour");
+                this.analyseTerminal("pour");
+                if (!this.estIdf()) {
+                    throw new ErreurSyntaxique("idf attendu après pour");
+                }
+                String idfPour = this.uniteCourante;
+                this.uniteCourante = this.analex.next();
+                this.analyseTerminal("dans");
+                Expression debut = this.analyseExpression();
+                this.analyseTerminal("..");
+                Expression fin = this.analyseExpression();
+                this.analyseTerminal("repeter");
+                Bloc blocPour = new Bloc();
+                this.analyseBloc(blocPour);
+                blocCourant.ajouter(new Pour(idfPour, debut, fin, blocPour));
+                break;
             case "tantque":
                 analyseTerminal("tantque");
                 analyseTerminal("(");

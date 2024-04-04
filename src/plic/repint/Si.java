@@ -18,7 +18,13 @@ public class Si extends Instruction {
 
     @Override
     public String toString() {
-        return "Si(" + expression + ") \n\t\t" + blocAlors.toStringImbriquee() + ", \n\t- Sinon\n\t\t" + blocSinon.toStringImbriquee() + "\n\t- FinSi";
+        var sb = new StringBuilder();
+        sb.append("Si(").append(expression).append(") \n\t\t").append(blocAlors.toStringImbriquee());
+        if (blocSinon != null) {
+            sb.append(", \n\t- Sinon\n\t\t").append(blocSinon.toStringImbriquee());
+        }
+        sb.append("\n\t- FinSi");
+        return sb.toString();
     }
 
     @Override
@@ -32,9 +38,11 @@ public class Si extends Instruction {
         sb.append(expression.toMips());
         sb.append("\tbeq $v0, $zero, else").append(this.hashCode()).append("\n");
         sb.append(blocAlors.toMips());
-        sb.append("\tj fin").append(this.hashCode()).append("\n");
+        sb.append("\tj suite").append(this.hashCode()).append("\n");
         sb.append("else").append(this.hashCode()).append(":\n");
-        sb.append(blocSinon.toMips());
+        if (blocSinon != null) {
+            sb.append(blocSinon.toMips());
+        }
         sb.append("suite").append(this.hashCode()).append(":\n");
         return sb.toString();
     }

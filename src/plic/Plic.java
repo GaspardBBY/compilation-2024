@@ -35,7 +35,7 @@ public class Plic {
         // Analyse syntaxique du texte source
         Bloc bloc = as.analyse();
         System.out.println(bloc);
-//        bloc.verifier();
+        bloc.verifier();
         var sb = new StringBuilder();
         sb.append(bloc.declareLineBreak());
         sb.append(".text\n");
