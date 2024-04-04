@@ -41,40 +41,9 @@ public class Plic {
         sb.append(".text\n");
         sb.append("main:\n");
 
-        List<List<Instruction>> listFin = new ArrayList<>();
-        int cpt = 0;
-        List<Instruction> instructions = bloc.getInstructions();
-        // temporaire, ne permet pas de gérer les blocs imbriqués
-        for (Instruction instruction : instructions) {
-            if (instruction instanceof Si) {
-                sb.append(((Si) instruction).toMipsSi(cpt));
-                listFin.add(new ArrayList<>());
-                cpt++;
-            } else {
-                if (listFin.isEmpty()) {
-                    sb.append(instruction.toMips());
-                } else {
-                    listFin.getLast().add(instruction);
-                }
-            }
-        }
-
-        // ajout des blocs supp
-        List<Instruction> instructionsIf = instructions.stream()
-                .filter(i -> i instanceof Si).toList();
-
-        for (int i = 0; i < instructionsIf.size(); i++) {
-            Si si = (Si) instructionsIf.get(i);
-            sb.append(si.toMipsElse(i));
-        }
-
-        // ajout des fins
-        for (int i = 0; i < listFin.size(); i++) {
-            sb.append("fin").append(i).append(":\n");
-            for (Instruction instruction : listFin.get(i)) {
-                sb.append(instruction.toMips());
-            }
-        }
+        sb.append(bloc.toMips());
+        sb.append("\tli $v0, 10\n");
+        sb.append("\tsyscall\n");
         System.out.println(sb);
     }
 }

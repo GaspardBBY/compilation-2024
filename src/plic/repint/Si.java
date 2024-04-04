@@ -28,33 +28,16 @@ public class Si extends Instruction {
 
     @Override
     public String toMips() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Génère le code mips pour le if, puis le blocAlors.toMips et pas blocSinon.toMips
-     *
-     * @return
-     */
-    public String toMipsSi(int indiceFin) {
         var sb = new StringBuilder();
         sb.append(expression.toMips());
-        sb.append("\tbeq $v0, $zero, else").append(indiceFin).append("\n");
+        sb.append("\tbeq $v0, $zero, else").append(this.hashCode()).append("\n");
         sb.append(blocAlors.toMips());
-        sb.append("\tj fin" + indiceFin + "\n");
+        sb.append("\tj fin").append(this.hashCode()).append("\n");
+        sb.append("else").append(this.hashCode()).append(":\n");
+        sb.append(blocSinon.toMips());
+        sb.append("fin").append(this.hashCode()).append(":\n");
         return sb.toString();
     }
 
-    public String toMipsElse(int number) {
-        var sb = new StringBuilder();
-        sb.append("else").append(number).append(":\n");
-        if (blocSinon != null) {
-            sb.append(blocSinon.toMips());
-        }
-        return sb.toString();
-    }
 
-    public Bloc[] getBlocs() {
-        return new Bloc[] {blocAlors, blocSinon};
-    }
 }
