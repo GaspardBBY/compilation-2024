@@ -1,0 +1,9 @@
+programme tq {
+    entier i ;
+    i := 0 ;
+    tantque ( i < 10 ) repeter {
+        ecrire i ;
+        i := i + 1 ;
+    }
+    ecrire i ;
+}

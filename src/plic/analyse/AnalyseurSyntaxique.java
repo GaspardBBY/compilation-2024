@@ -79,8 +79,7 @@ public class AnalyseurSyntaxique {
         }
         if (logger)
             System.out.println("\t|Fin de la première inscruction, caractère courant : " + this.uniteCourante);
-        while (this.uniteCourante.equals("ecrire") || this.estIdf() || this.uniteCourante.equals("lire") || this.uniteCourante.equals("si") || this.uniteCourante.equals("pour") || this.uniteCourante.equals("tantque"))
-        {
+        while (this.uniteCourante.equals("ecrire") || this.estIdf() || this.uniteCourante.equals("lire") || this.uniteCourante.equals("si") || this.uniteCourante.equals("pour") || this.uniteCourante.equals("tantque")) {
             this.analyseInstruction(blocCourant);
         }
         if (logger)
@@ -220,7 +219,15 @@ public class AnalyseurSyntaxique {
             case "pour":
                 throw new ErreurSemantique("Pour n'est pas encore implémenté");
             case "tantque":
-                throw new ErreurSemantique("Tantque n'est pas encore implémenté");
+                analyseTerminal("tantque");
+                analyseTerminal("(");
+                Expression expressionTantQue = analyseExpression();
+                analyseTerminal(")");
+                analyseTerminal("repeter");
+                Bloc blocTantQue = new Bloc();
+                analyseBloc(blocTantQue);
+                blocCourant.ajouter(new TantQue(expressionTantQue, blocTantQue));
+                break;
             default:
                 if (logger) System.out.println("\t\tAnalyse d'une affectation");
                 var affectation = this.analyseAffectation();

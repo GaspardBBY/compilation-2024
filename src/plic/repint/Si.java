@@ -35,7 +35,7 @@ public class Si extends Instruction {
         sb.append("\tj fin").append(this.hashCode()).append("\n");
         sb.append("else").append(this.hashCode()).append(":\n");
         sb.append(blocSinon.toMips());
-        sb.append("fin").append(this.hashCode()).append(":\n");
+        sb.append("suite").append(this.hashCode()).append(":\n");
         return sb.toString();
     }
 
