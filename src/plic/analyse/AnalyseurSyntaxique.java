@@ -182,17 +182,45 @@ public class AnalyseurSyntaxique {
      *
      * @throws ErreurSyntaxique Si non conforme
      */
-    private void analyseInstruction(Bloc blocCourant) throws ErreurSyntaxique, ErreurSemantique {
+    private void analyseInstruction(Bloc blocCourant) throws ErreurSyntaxique, ErreurSemantique, DoubleDeclaration {
         if (logger) System.out.println("\tAnalyse d'une instruction");
-        if (this.uniteCourante.equals("ecrire")) {
-            if (logger) System.out.println("\t\tAnalyse d'une ES");
-            var instruction = this.analyseES();
-            blocCourant.ajouter(instruction);
-        } else {
-            if (logger) System.out.println("\t\tAnalyse d'une affectation");
-            var instruction = this.analyseAffectation();
-            blocCourant.ajouter(instruction);
-            if (logger) System.out.println("\t\tAffectation ajoutée");
+        switch (this.uniteCourante) {
+            case "ecrire":
+                if (logger) System.out.println("\t\tAnalyse d'une ES");
+                var instruction = this.analyseES();
+                blocCourant.ajouter(instruction);
+                break;
+            case "lire":
+                throw new ErreurSemantique("Lire n'est pas encore implémenté");
+            case "si":
+                if (logger) System.out.println("\t\tAnalyse d'un si");
+                //si ( EXPRESSION ) alors BLOC sinon BLOC
+                this.uniteCourante = this.analex.next();
+                this.analyseTerminal("(");
+                var expression = this.analyseExpression();
+                this.analyseTerminal(")");
+                this.analyseTerminal("alors");
+                var blocAlors = new Bloc();
+                this.analyseBloc(blocAlors);
+                if (this.uniteCourante.equals("sinon")) {
+                    this.analyseTerminal("sinon");
+                    var blocSinon = new Bloc();
+                    this.analyseBloc(blocSinon);
+                    blocCourant.ajouter(new Si(expression, blocAlors, blocSinon));
+                } else {
+                    blocCourant.ajouter(new Si(expression, blocAlors));
+                }
+
+                break;
+            case "pour":
+                throw new ErreurSemantique("Pour n'est pas encore implémenté");
+            case "tantque":
+                throw new ErreurSemantique("Tantque n'est pas encore implémenté");
+            default:
+                if (logger) System.out.println("\t\tAnalyse d'une affectation");
+                var affectation = this.analyseAffectation();
+                blocCourant.ajouter(affectation);
+                break;
         }
         if (logger) System.out.println("\tFin de l'analyse d'une instruction");
     }

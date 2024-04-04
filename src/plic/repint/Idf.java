@@ -15,6 +15,10 @@ public class Idf extends Acces {
         return nom;
     }
 
+    public String getNom() {
+        return nom;
+    }
+
     @Override
     public String getTypes() {
         var symbole = TDS.getSymbole(nom);
@@ -30,8 +34,11 @@ public class Idf extends Acces {
 
     public String toMips() {
         // load the value of the variable into $v0
-        Symbole symbole = TDS.getSymbole(this.nom);
-        return "lw $v0, " + symbole.getDeplacement() + "($sp)\n";
+        return "lw $v0, " + getSymbole().getDeplacement() + "($sp)\n";
+    }
+
+    public Symbole getSymbole() {
+        return TDS.getSymbole(nom);
     }
 
     /**

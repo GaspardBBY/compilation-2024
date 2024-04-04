@@ -1,6 +1,7 @@
 package plic.repint;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Bloc {
     ArrayList<Instruction> instructions;
@@ -15,6 +16,10 @@ public class Bloc {
 
     public String toString() {
         return "Bloc\n\t- " + this.instructions.stream().map(Instruction::toString).reduce((a, b) -> a + "\n\t- " + b).orElse("") + "\nFinBloc\n";
+    }
+
+    public String toStringImbriquee() {
+        return this.instructions.stream().map(Instruction::toString).reduce((a, b) -> a + "\n\t\t" + b).orElse("");
     }
 
     /**
@@ -35,10 +40,16 @@ public class Bloc {
      * @return le code MIPS pour le bloc
      */
     public String toMips() {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append(declareLineBreak());
+//        sb.append(".text\n");
+//        for (Instruction i : this.instructions) {
+//            sb.append(i.toMips());
+//        }
+//        return sb.toString();
         StringBuilder sb = new StringBuilder();
-        sb.append(declareLineBreak());
-        sb.append(".text\n");
-        for (Instruction i : this.instructions) {
+
+        for (Instruction i : instructions) {
             sb.append(i.toMips());
         }
         return sb.toString();
@@ -49,10 +60,14 @@ public class Bloc {
      *
      * @return le code MIPS pour déclarer un saut de ligne
      */
-    private String declareLineBreak() {
+    public String declareLineBreak() {
         StringBuilder sb = new StringBuilder();
         sb.append(".data\n");
         sb.append("linebreak: .asciiz \"\\n\"\n");
         return sb.toString();
+    }
+
+    public List<Instruction> getInstructions() {
+        return instructions;
     }
 }
