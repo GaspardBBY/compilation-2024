@@ -28,7 +28,7 @@ public class Si extends Instruction {
 
     @Override
     public String toMips() {
-        return toMipsSi(0);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -39,7 +39,7 @@ public class Si extends Instruction {
     public String toMipsSi(int indiceFin) {
         var sb = new StringBuilder();
         sb.append(expression.toMips());
-        sb.append("\t\tbeq $v0, $zero, else").append(indiceFin).append("\n");
+        sb.append("\tbeq $v0, $zero, else").append(indiceFin).append("\n");
         sb.append(blocAlors.toMips());
         sb.append("\tj fin" + indiceFin + "\n");
         return sb.toString();
@@ -52,5 +52,9 @@ public class Si extends Instruction {
             sb.append(blocSinon.toMips());
         }
         return sb.toString();
+    }
+
+    public Bloc[] getBlocs() {
+        return new Bloc[] {blocAlors, blocSinon};
     }
 }

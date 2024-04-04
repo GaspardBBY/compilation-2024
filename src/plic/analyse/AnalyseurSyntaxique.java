@@ -79,7 +79,8 @@ public class AnalyseurSyntaxique {
         }
         if (logger)
             System.out.println("\t|Fin de la première inscruction, caractère courant : " + this.uniteCourante);
-        while (this.uniteCourante.equals("ecrire") || this.estIdf()) {
+        while (this.uniteCourante.equals("ecrire") || this.estIdf() || this.uniteCourante.equals("lire") || this.uniteCourante.equals("si") || this.uniteCourante.equals("pour") || this.uniteCourante.equals("tantque"))
+        {
             this.analyseInstruction(blocCourant);
         }
         if (logger)
@@ -191,7 +192,11 @@ public class AnalyseurSyntaxique {
                 blocCourant.ajouter(instruction);
                 break;
             case "lire":
-                throw new ErreurSemantique("Lire n'est pas encore implémenté");
+                analyseTerminal("lire");
+                Acces idf = this.analyseAcces();
+                this.analyseTerminal(";");
+                blocCourant.ajouter(new Lire(new Idf(idf.toString())));
+                break;
             case "si":
                 if (logger) System.out.println("\t\tAnalyse d'un si");
                 //si ( EXPRESSION ) alors BLOC sinon BLOC

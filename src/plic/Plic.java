@@ -44,16 +44,17 @@ public class Plic {
         List<List<Instruction>> listFin = new ArrayList<>();
         int cpt = 0;
         List<Instruction> instructions = bloc.getInstructions();
-        for (Instruction i : instructions) {
-            if (i instanceof Si) {
-                sb.append(((Si) i).toMipsSi(cpt));
+        // temporaire, ne permet pas de gérer les blocs imbriqués
+        for (Instruction instruction : instructions) {
+            if (instruction instanceof Si) {
+                sb.append(((Si) instruction).toMipsSi(cpt));
                 listFin.add(new ArrayList<>());
                 cpt++;
             } else {
                 if (listFin.isEmpty()) {
-                    sb.append(i.toMips());
+                    sb.append(instruction.toMips());
                 } else {
-                    listFin.getLast().add(i);
+                    listFin.getLast().add(instruction);
                 }
             }
         }

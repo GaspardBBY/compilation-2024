@@ -1,0 +1,6 @@
+programme a {
+    entier a ;
+    a := 5 ;
+    lire a ;
+    ecrire a ;
+}

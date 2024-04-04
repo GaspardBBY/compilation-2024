@@ -62,7 +62,7 @@ public class Bloc {
      */
     public String declareLineBreak() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\t.data\n");
+        sb.append(".data\n");
         sb.append("\tlinebreak: .asciiz \"\\n\"\n");
         return sb.toString();
     }
