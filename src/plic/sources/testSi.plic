@@ -1,7 +1,13 @@
 programme test {
     entier a ;
     a := 2 ;
-    si ( a > 0 ) alors {
+    si ( a < 0 ) alors {
+        a := 1 ;
+    } sinon {
+        a := 2 ;
+    }
+    ecrire a ;
+    si ( a < 0 ) alors {
         a := 1 ;
     } sinon {
         a := 2 ;

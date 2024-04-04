@@ -36,19 +36,19 @@ public abstract class Operateur extends Expression {
     public String toMips() {
         var sb = new StringBuilder();
         if (droite == null) {
-            sb.append("# Calcul de l'opérande unique\n");
+            sb.append("\t# Calcul de l'opérande unique\n");
             sb.append(gauche.toMips());
         } else {
-            sb.append("# Calcul de droite dans $v0\n");
+            sb.append("\t# Calcul de droite dans $v0\n");
             sb.append(droite.toMips());
-            sb.append("# Sauvegarde de $v0 dans $v1\n");
-            sb.append("move $v1, $v0\n");
-            sb.append("# Calcul de gauche dans $v0\n");
+            sb.append("\t# Sauvegarde de $v0 dans $v1\n");
+            sb.append("\tmove $v1, $v0\n");
+            sb.append("\t# Calcul de gauche dans $v0\n");
             sb.append(gauche.toMips());
-            sb.append("# Operation de $v0 et $v1\n");
+            sb.append("\t# Operation de $v0 et $v1\n");
         }
 
-        sb.append(toMipsOperation());
+        sb.append("\t").append(toMipsOperation());
         return sb.toString();
     }
 }

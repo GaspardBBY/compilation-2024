@@ -38,13 +38,13 @@ public class Affectation extends Instruction {
     @Override
     public String toMips() {
         StringBuilder sb = new StringBuilder();
-        sb.append("# Affectation\n");
+        sb.append("\t# Affectation\n");
         sb.append(exp.toMips());
-        sb.append("# Utilisation d'une variable temporaire\n");
-        sb.append("move $t1, $v0\n");
+        sb.append("\t# Utilisation d'une variable temporaire\n");
+        sb.append("\tmove $t1, $v0\n");
         sb.append(acces.getAdresse());
-        sb.append("move $v0, $t1\n");
-        sb.append("sw $v0, 0($a0)\n");
+        sb.append("\tmove $v0, $t1\n");
+        sb.append("\tsw $v0, 0($a0)\n");
         return sb.toString();
     }
 

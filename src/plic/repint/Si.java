@@ -39,7 +39,7 @@ public class Si extends Instruction {
     public String toMipsSi(int indiceFin) {
         var sb = new StringBuilder();
         sb.append(expression.toMips());
-        sb.append("\tbeq $v0, $zero, else").append(indiceFin).append("\n");
+        sb.append("\t\tbeq $v0, $zero, else").append(indiceFin).append("\n");
         sb.append(blocAlors.toMips());
         sb.append("\tj fin" + indiceFin + "\n");
         return sb.toString();

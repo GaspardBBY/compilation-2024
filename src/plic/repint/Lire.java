@@ -21,9 +21,9 @@ public class Lire extends Instruction {
     @Override
     public String toMips() {
         var sb = new StringBuilder();
-        sb.append("\tli $v0, 5\n");
-        sb.append("\tsyscall\n");
-        sb.append("\tsw $v0, ").append(idf.getSymbole().getDeplacement()).append("($sp)\n");
+        sb.append("\t\tli $v0, 5\n");
+        sb.append("\t\tsyscall\n");
+        sb.append("\t\tsw $v0, ").append(idf.getSymbole().getDeplacement()).append("($sp)\n");
         return sb.toString();
     }
 

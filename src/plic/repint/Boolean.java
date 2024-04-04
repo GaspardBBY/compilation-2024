@@ -26,8 +26,8 @@ public class Boolean extends Expression {
     @Override
     public String toMips() {
         var sb = new StringBuilder();
-        sb.append("# Chargement de la valeur booléenne dans $v0\n");
-        sb.append("li $v0, " + (valeur ? 1 : 0) + "\n");
+        sb.append("\t# Chargement de la valeur booléenne dans $v0\n");
+        sb.append("\tli $v0, " + (valeur ? 1 : 0) + "\n");
         return sb.toString();
     }
 }

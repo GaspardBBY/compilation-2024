@@ -28,18 +28,18 @@ public class Ecrire extends Instruction {
     public String toMips() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("# Ecrire ").append(exp.toString()).append("\n");
+        sb.append("\t# Ecrire ").append(exp.toString()).append("\n");
 
         sb.append(exp.toMips());
         // Instructions pour afficher la valeur de $v0
-        sb.append("move $a0, $v0\n");
-        sb.append("li $v0, 1\n");
-        sb.append("syscall\n");
+        sb.append("\tmove $a0, $v0\n");
+        sb.append("\tli $v0, 1\n");
+        sb.append("\tsyscall\n");
 
         // saut de ligne
-        sb.append("la $a0, linebreak\n");
-        sb.append("li $v0, 4\n");
-        sb.append("syscall\n");
+        sb.append("\tla $a0, linebreak\n");
+        sb.append("\tli $v0, 4\n");
+        sb.append("\tsyscall\n");
         return sb.toString();
     }
 }

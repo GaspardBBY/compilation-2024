@@ -42,7 +42,7 @@ public class Bloc {
     public String toMips() {
 //        StringBuilder sb = new StringBuilder();
 //        sb.append(declareLineBreak());
-//        sb.append(".text\n");
+//        sb.append("\t.text\n");
 //        for (Instruction i : this.instructions) {
 //            sb.append(i.toMips());
 //        }
@@ -62,8 +62,8 @@ public class Bloc {
      */
     public String declareLineBreak() {
         StringBuilder sb = new StringBuilder();
-        sb.append(".data\n");
-        sb.append("linebreak: .asciiz \"\\n\"\n");
+        sb.append("\t.data\n");
+        sb.append("\tlinebreak: .asciiz \"\\n\"\n");
         return sb.toString();
     }
 

@@ -11,8 +11,8 @@ public class Non extends OperateurLogique {
     @Override
     public String toMipsOperation() {
         var sb = new StringBuilder();
-        sb.append("nor $v0, $v0, $v0\n");
-        sb.append("xori $v0, $v0, -2\n");
+        sb.append("\tnor $v0, $v0, $v0\n");
+        sb.append("\txori $v0, $v0, -2\n");
         return sb.toString();
     }
 }

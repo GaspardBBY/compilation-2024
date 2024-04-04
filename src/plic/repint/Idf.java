@@ -34,7 +34,7 @@ public class Idf extends Acces {
 
     public String toMips() {
         // load the value of the variable into $v0
-        return "lw $v0, " + getSymbole().getDeplacement() + "($sp)\n";
+        return "\tlw $v0, " + getSymbole().getDeplacement() + "($sp)\n";
     }
 
     public Symbole getSymbole() {
@@ -48,6 +48,6 @@ public class Idf extends Acces {
     @Override
     public String getAdresse() {
         var deplacement = TDS.getSymbole(nom).getDeplacement();
-        return "la $a0, " + deplacement + "($sp)\n";
+        return "\tla $a0, " + deplacement + "($sp)\n";
     }
 }

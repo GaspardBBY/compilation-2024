@@ -44,9 +44,9 @@ public class AccesTableau extends Acces {
     @Override
     public String toMips() {
         StringBuilder sb = new StringBuilder();
-        sb.append("# toMips de acces tableau\n");
+        sb.append("\t# toMips de acces tableau\n");
         sb.append(this.getAdresse());
-        sb.append("lw $v0, 0($a0)\n");
+        sb.append("\tlw $v0, 0($a0)\n");
         return sb.toString();
     }
 
@@ -55,13 +55,13 @@ public class AccesTableau extends Acces {
         var sb = new StringBuilder();
         var symbole = TDS.getSymbole(idf.getIdf());
         int deplacement = symbole.getDeplacement();
-        sb.append("# On met l'adresse de l'expression dans $a0\n");
+        sb.append("\t# On met l'adresse de l'expression dans $a0\n");
         sb.append(expression.toMips());
-        sb.append("# On multiplie la valeur dans $v0 par 4\n");
-        sb.append("addiu $a0, $sp, ").append(deplacement).append("\n");
-        sb.append("mul $v0, $v0, -4\n");
-        sb.append("# On additionne le déplacement initial de l'idf\n");
-        sb.append("addu $a0, $a0, $v0\n");
+        sb.append("\t# On multiplie la valeur dans $v0 par 4\n");
+        sb.append("\taddiu $a0, $sp, ").append(deplacement).append("\n");
+        sb.append("\tmul $v0, $v0, -4\n");
+        sb.append("\t# On additionne le déplacement initial de l'idf\n");
+        sb.append("\taddu $a0, $a0, $v0\n");
         return sb.toString();
     }
 
@@ -73,13 +73,13 @@ public class AccesTableau extends Acces {
      */
     public static String ecrire(String var) {
         var sb = new StringBuilder();
-        sb.append("# Ecrire ").append(var).append("\n");
-        sb.append("move $a0, ").append(var).append("\n");
-        sb.append("li $v0, 1\n");
-        sb.append("syscall\n");
-        sb.append("la $a0, linebreak\n");
-        sb.append("li $v0, 4\n");
-        sb.append("syscall\n");
+        sb.append("\t# Ecrire ").append(var).append("\n");
+        sb.append("\tmove $a0, ").append(var).append("\n");
+        sb.append("\tli $v0, 1\n");
+        sb.append("\tsyscall\n");
+        sb.append("\tla $a0, linebreak\n");
+        sb.append("\tli $v0, 4\n");
+        sb.append("\tsyscall\n");
         return sb.toString();
     }
 

@@ -12,7 +12,7 @@ public class Multiplication extends OperateurArithmetique {
 
     @Override
     public String toMipsOperation() {
-        return "mul $v0, $v0, $v1\n";
+        return "\tmul $v0, $v0, $v1\n";
     }
 
 }
