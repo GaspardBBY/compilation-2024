@@ -24,15 +24,22 @@ public class Pour extends Instruction {
     @Override
     public void verifier() throws ErreurSemantique {
         // verification a n'est pas déclaré
-        Symbole symbole = new SymboleEntier("entier");
-        Entree entree = new Entree(idf);
-        try {
-            TDS.getInstance().ajouter(entree, symbole);
-        } catch (DoubleDeclaration e) {
-            // catch pour déclarer la bonne erreur
-            throw new ErreurSemantique("Erreur semantique : " + idf + " est déjà déclaré, or dans une boucle pour il ne doit pas être déclaré");
+        Symbole symbole = TDS.getSymbole(idf);
+        if (symbole == null) {
+            throw new ErreurSemantique("Erreur : identifiant " + idf + " non déclaré, il faut le déclarer avant de l'utiliser dans une boucle pour");
         }
-
+        // verification a est un entier
+        if (!symbole.getType().equals("entier")) {
+            throw new ErreurSemantique("Erreur : identifiant " + idf + " n'est pas un entier, il faut un entier pour une boucle pour");
+        }
+        // verification debut est un entier
+        if (!debut.getTypes().equals("entier")) {
+            throw new ErreurSemantique("Erreur : la borne de début de la boucle pour n'est pas un entier");
+        }
+        // verification fin est un entier
+        if (!fin.getTypes().equals("entier")) {
+            throw new ErreurSemantique("Erreur : la borne de fin de la boucle pour n'est pas un entier");
+        }
     }
 
     @Override

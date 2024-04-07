@@ -1,0 +1,9 @@
+programme pourDeclare {
+    entier b ;
+    entier fin ;
+    fin := 10 ;
+
+    pour b dans ( 4 < 5 ) .. fin repeter {
+        ecrire b ;
+    }
+}

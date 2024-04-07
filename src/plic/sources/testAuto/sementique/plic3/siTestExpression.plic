@@ -1,0 +1,8 @@
+programme pourDeclare {
+    entier b ;
+    si ( b + 0 ) alors {
+        b := 1 ;
+    } sinon {
+        b := 2 ;
+    }
+}

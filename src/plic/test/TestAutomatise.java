@@ -5,6 +5,7 @@ import plic.repint.ErreurSemantique;
 
 import java.io.File;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
@@ -32,6 +33,17 @@ public class TestAutomatise {
         assert files != null;
         for (File file : files) {
             assertThrows(ErreurSyntaxique.class, () -> new Plic(file.getAbsolutePath()), "Erreur sémantiques non soulevée sur le fichier \"" + file.getName() + "\"");
+        }
+    }
+
+    @Test
+    public void testNotThrow() {
+        File repertoire = new File("src\\plic\\sources\\testAuto\\notThrow");
+        File[] files = repertoire.listFiles();
+        assert files != null;
+        for (File file : files) {
+            // if file throw an exception, the test will fail
+            assertDoesNotThrow(() -> new Plic(file.getAbsolutePath()), "Le fichier \"" + file.getName() + "n'aurait pas du soulever d'erreur\"");
         }
     }
 

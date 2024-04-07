@@ -1,0 +1,7 @@
+programme pourDeclare {
+    boolean b ;
+    pour b dans 1 .. 10 repeter {
+        b := b + 1 ;
+        ecrire b ;
+    }
+}

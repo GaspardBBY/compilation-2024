@@ -1,0 +1,6 @@
+programme prog {
+  entier n ;
+  n := 2 ;
+  lire n ;
+  ecrire n ;
+}

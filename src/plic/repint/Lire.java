@@ -15,7 +15,14 @@ public class Lire extends Instruction {
 
     @Override
     public void verifier() throws ErreurSemantique {
-
+        // idf doit exister
+        if (idf.getSymbole() == null) {
+            throw new ErreurSemantique("L'idf " + idf + " n'existe pas");
+        }
+        // idf doit être un entier
+        if (!idf.getSymbole().getType().equals("entier")) {
+            throw new ErreurSemantique("L'idf " + idf + " n'est pas un entier");
+        }
     }
 
     @Override

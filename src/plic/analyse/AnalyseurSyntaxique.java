@@ -49,7 +49,7 @@ public class AnalyseurSyntaxique {
             throw new ErreurSyntaxique("programme attendu");
         this.uniteCourante = this.analex.next();
         if (!this.estIdf())
-            throw new ErreurSyntaxique("idf attendu");
+            throw new ErreurSyntaxique("Le nom du programme n'est pas correct");
         this.uniteCourante = this.analex.next();
         this.analyseBloc(blocCourant);
         this.uniteCourante = this.analex.next();

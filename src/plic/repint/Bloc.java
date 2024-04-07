@@ -40,13 +40,6 @@ public class Bloc {
      * @return le code MIPS pour le bloc
      */
     public String toMips() {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(declareLineBreak());
-//        sb.append("\t.text\n");
-//        for (Instruction i : this.instructions) {
-//            sb.append(i.toMips());
-//        }
-//        return sb.toString();
         StringBuilder sb = new StringBuilder();
 
         for (Instruction i : instructions) {
@@ -65,9 +58,5 @@ public class Bloc {
         sb.append(".data\n");
         sb.append("\tlinebreak: .asciiz \"\\n\"\n");
         return sb.toString();
-    }
-
-    public List<Instruction> getInstructions() {
-        return instructions;
     }
 }

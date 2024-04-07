@@ -16,7 +16,10 @@ public class TantQue extends Instruction{
 
     @Override
     public void verifier() throws ErreurSemantique {
-
+        // expression doit être un boolean
+        if (!expression.getTypes().equals("boolean")) {
+            throw new ErreurSemantique("l'expression du tant que n'est pas un booleen");
+        }
     }
 
     @Override

@@ -29,6 +29,10 @@ public class Si extends Instruction {
 
     @Override
     public void verifier() throws ErreurSemantique {
+        // verification de l'expression
+        if (!expression.getTypes().equals("boolean")) {
+            throw new ErreurSemantique("l'expression du si n'est pas un booleen");
+        }
 
     }
 

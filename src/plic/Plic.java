@@ -2,16 +2,15 @@ package plic;
 
 import plic.analyse.AnalyseurSyntaxique;
 import plic.analyse.ErreurSyntaxique;
-import plic.repint.*;
+import plic.repint.Bloc;
+import plic.repint.DoubleDeclaration;
+import plic.repint.ErreurSemantique;
+import plic.repint.TDS;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Plic {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws DoubleDeclaration, ErreurSemantique, ErreurSyntaxique {
         try {
             if (args.length < 1) {
                 throw new Error("ERREUR: Fichier source absent");
@@ -24,6 +23,9 @@ public class Plic {
             new Plic(fichier);
         } catch (ErreurSyntaxique | DoubleDeclaration | ErreurSemantique e) {
             System.out.println(e.getMessage());
+        } catch (Exception | Error e ) {
+            // catch unknown exception
+            System.out.println("ERREUR: " + e.getMessage());
         }
     }
 
@@ -34,7 +36,6 @@ public class Plic {
         AnalyseurSyntaxique as = new AnalyseurSyntaxique(file);
         // Analyse syntaxique du texte source
         Bloc bloc = as.analyse();
-        System.out.println(bloc);
         bloc.verifier();
         var sb = new StringBuilder();
         sb.append(bloc.declareLineBreak());
